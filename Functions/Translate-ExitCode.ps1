@@ -6,13 +6,13 @@
 		$Process
 	)
     
-    $Errorxmlpath = "C:\Windows\temp\test.xml"
+    $Errorxmlpath = "C:\Windows\temp\exitcodes.xml"
     if(!(test-path $Errorxmlpath)){
 	    Invoke-WebRequest -uri "https://raw.githubusercontent.com/ainfosys/ScriptHelpers/main/Files/ms-error-codes.xml" -OutFile "C:\Windows\temp\test.xml"
     }
 
-	[xml]$ErrorXml = Get-Content "C:\Windows\temp\test.xml"
-	$SpecifiedError = $ErrorXml.Root.row | where { $_.code -eq $($Process) }
+	[xml]$ErrorXml = Get-Content $Errorxmlpath
+	$SpecifiedError = $ErrorXml.Root.row | where { $_.code -eq $($Process.exitcode) }
 	
 	# append to psobject, add property to indicate if the exit code means failure or not
 	switch ($($SpecifiedError.Code)) {
