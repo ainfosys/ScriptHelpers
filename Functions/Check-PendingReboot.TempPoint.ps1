@@ -62,6 +62,7 @@
 		PendingComputerRenameDomainJoin  = $pendingComputerRename
 		PendingFileRenameOperations	     = $registryPendingFileRenameOperationsBool
 		PendingFileRenameOperationsValue = $registryPendingFileRenameOperations
+		SystemCenterConfigManager	     = $systemCenterConfigManager
 		WindowsUpdateAutoUpdate		     = $registryWindowsUpdateAutoUpdate
 		IsRebootPending				     = $isRebootPending
 		
