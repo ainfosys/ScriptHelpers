@@ -1,0 +1,17 @@
+<?xml version="1.0"?>
+<Windows>
+<Info Version="1507" Build="10240" Release_Date="7/29/2015" GAC_EOL="5/9/2017" GAC_Enterprise_EOL="5/9/2017" LTSC_EOL="10/14/2025" Major_Version="10"></Info>
+<Info Version="1511" Build="10586" Release_Date="11/10/2015" GAC_EOL="10/10/2017" GAC_Enterprise_EOL="4/10/2018" LTSC_EOL="N/A" Major_Version="10"></Info>
+<Info Version="1607" Build="14393" Release_Date="8/2/2016" GAC_EOL="4/10/2018" GAC_Enterprise_EOL="4/9/2019" LTSC_EOL="10/13/2026" Major_Version="10"></Info>
+<Info Version="1703" Build="15063" Release_Date="4/9/2017" GAC_EOL="10/9/2018" GAC_Enterprise_EOL="10/8/2019" LTSC_EOL="N/A" Major_Version="10"></Info>
+<Info Version="1709" Build="16299" Release_Date="9/17/2017" GAC_EOL="5/9/2019" GAC_Enterprise_EOL="10/13/2020" LTSC_EOL="N/A" Major_Version="10"></Info>
+<Info Version="1803" Build="17134" Release_Date="4/30/2018" GAC_EOL="11/12/2019" GAC_Enterprise_EOL="5/11/2021" LTSC_EOL="N/A" Major_Version="10"></Info>
+<Info Version="1809" Build="17763" Release_Date="11/13/2018" GAC_EOL="11/10/2020" GAC_Enterprise_EOL="5/11/2021" LTSC_EOL="1/9/2029" Major_Version="10"></Info>
+<Info Version="1903" Build="18362" Release_Date="5/21/2019" GAC_EOL="12/8/2020" GAC_Enterprise_EOL="12/8/2020" LTSC_EOL="N/A" Major_Version="10"></Info>
+<Info Version="1909" Build="18363" Release_Date="11/12/2019" GAC_EOL="5/11/2021" GAC_Enterprise_EOL="5/10/2022" LTSC_EOL="N/A" Major_Version="10"></Info>
+<Info Version="2004" Build="19041" Release_Date="5/27/2020" GAC_EOL="12/14/2021" GAC_Enterprise_EOL="12/14/2021" LTSC_EOL="N/A" Major_Version="10"></Info>
+<Info Version="20H2" Build="19042" Release_Date="10/20/2020" GAC_EOL="5/10/2022" GAC_Enterprise_EOL="5/9/2023" LTSC_EOL="N/A" Major_Version="10"></Info>
+<Info Version="21H1" Build="19043" Release_Date="5/18/2021" GAC_EOL="12/13/2022" GAC_Enterprise_EOL="12/13/2022" LTSC_EOL="N/A" Major_Version="10"></Info>
+<Info Version="21H2" Build="19044" Release_Date="11/16/2021" GAC_EOL="6/13/2023" GAC_Enterprise_EOL="6/11/2024" LTSC_EOL="1/12/2027" Major_Version="10"></Info>
+<Info Version="21H2" Build="22000" Release_Date="10/4/2021" GAC_EOL="10/10/2023" GAC_Enterprise_EOL="10/8/2024" LTSC_EOL="N/A" Major_Version="11"></Info>
+</Windows>
