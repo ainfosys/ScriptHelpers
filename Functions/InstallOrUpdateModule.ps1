@@ -97,5 +97,3 @@
             }
     }
 }
-
-InstallOrUpdateModule
