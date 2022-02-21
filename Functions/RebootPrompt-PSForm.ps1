@@ -8,6 +8,7 @@
         [String]
 	    $PromptMessage = 'An important update has been applied to your computer. Please save an close any open work and press the "Reboot now" button to restart the computer. If now isn''t a good time select how long you would like to delay the reboot prompt and press the "Delay Reboot" button.'
     )
+
 	#----------------------------------------------
 	#region Import the Assemblies
 	#----------------------------------------------
@@ -56,7 +57,8 @@
 				Remove-Item -Path $ResponseTxtPath -Force
 		}
 		
-		New-Item -Path $ResponseTxtPath -Value "Open:$(Get-Date)" -ItemType File -Force
+		New-Item -Path "C:\Windows\temp" -Name "rebootpromptresponse.txt" -ItemType File -Force
+		Add-Content -path $ResponseTxtPath -Value "Open_$(Get-Date)"
 	}
 	
 	$button_RebootNow_Click={
@@ -65,8 +67,8 @@
 		{
 			"YES" {
 				Write-Host "User selected to reboot and confirmed selection. Rebooting now."
-				Add-Content -Path $script:ResponseTxtPath -Value "Closed:$(Get-Date)" -Force
-				Add-Content -Path $script:ResponseTxtPath -Value "Response:Rebooted" -Force
+				Add-Content -Path $script:ResponseTxtPath -Value "Closed_$(Get-Date)" -Force
+				Add-Content -Path $script:ResponseTxtPath -Value "Response_Rebooted" -Force
 				Restart-Computer			
 			}
 		}
@@ -74,8 +76,8 @@
 	
 	$buttonDelayReboot_Click={
 		Write-Host "User selected to delay reboot prompt. Delayed $($combobox_delaytime.Text)"
-		Add-Content -Path $script:ResponseTxtPath -Value "Closed:$(Get-Date)" -Force
-		Add-Content -Path $script:ResponseTxtPath -Value "Response:Delayed $($combobox_delaytime.Text)" -Force
+		Add-Content -Path $script:ResponseTxtPath -Value "Closed_$(Get-Date)" -Force
+		Add-Content -Path $script:ResponseTxtPath -Value "Response_Delayed $($combobox_delaytime.Text)" -Force
 		$form_SystemUpdate.add_Closing({ $_.Cancel = $False })
 		$form_SystemUpdate.Close()	
 	}
