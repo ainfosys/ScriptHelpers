@@ -1,5 +1,4 @@
 ﻿function Show-Reboot-Required-Prompt_psf {
-    
     param
     (
 	    [parameter(Mandatory = $false)]
@@ -9,7 +8,6 @@
         [String]
 	    $PromptMessage = 'An important update has been applied to your computer. Please save an close any open work and press the "Reboot now" button to restart the computer. If now isn''t a good time select how long you would like to delay the reboot prompt and press the "Delay Reboot" button.'
     )
-
 	#----------------------------------------------
 	#region Import the Assemblies
 	#----------------------------------------------
@@ -50,43 +48,25 @@
 		# Disallow form closing through means other than the provided buttons
 		$form_SystemUpdate.add_Closing({ $_.Cancel = $true })
 		
-		# Check the registry for key properties tracking user response and last time the prompt was opened/closed
-		$script:Key = "HKLM:\SOFTWARE\RebootPrompt"
-		if (Test-Path $Key)
+		# Record prompt information within a temp text file
+		$Script:ResponseTxtPath = "C:\Windows\temp\rebootpromptresponse.txt"
+		
+		if (Test-Path $ResponseTxtPath)
 		{
-			# key already exists, get values of properties if they exist
-			$script:PreviousPromptInfo = @{
-				Open = $(Get-ItemProperty -Path $Key -Name "Open" -ErrorAction SilentlyContinue)
-				Close = $(Get-ItemProperty -Path $Key -Name "Close" -ErrorAction SilentlyContinue)
-				Response = $(Get-ItemProperty -Path $Key -Name "Response" -ErrorAction SilentlyContinue)
-			}
-			
-			# record the time the prompt was opened on the computer
-			Set-ItemProperty -Path $Key -Name "Open" -Value "$(Get-date)" -Force
-		}
-		else
-		{
-			# the key doesn't exist so create it now
-			New-Item -Path $($key | Split-Path -Parent) -Name $($Key | Split-Path -Leaf) -Force
-			
-			# record the time the prompt was opened on the computer
-			New-ItemProperty -Path $Key -Name "Open" -Value "$(Get-date)" -PropertyType String -Force
-			
-			# create empty key properties to be filled on form close
-			New-ItemProperty -Path $Key -Name "Close" -PropertyType String -Force
-			New-ItemProperty -Path $Key -Name "Response" -PropertyType String -Force
+				Remove-Item -Path $ResponseTxtPath -Force
 		}
 		
+		New-Item -Path $ResponseTxtPath -Value "Open:$(Get-Date)" -ItemType File -Force
 	}
-
+	
 	$button_RebootNow_Click={
 		$oReturn = [System.Windows.Forms.MessageBox]::Show("Reboot and apply the system update now?", "Confirm", [System.Windows.Forms.MessageBoxButtons]::YesNo)
 		switch ($oReturn)
 		{
 			"YES" {
 				Write-Host "User selected to reboot and confirmed selection. Rebooting now."
-				Set-ItemProperty -Path $script:Key -Name "Close" -Value $(Get-date) -Force
-				Set-ItemProperty -Path $script:Key -Name "Response" -Value "Reboot" -Force
+				Add-Content -Path $script:ResponseTxtPath -Value "Closed:$(Get-Date)" -Force
+				Add-Content -Path $script:ResponseTxtPath -Value "Response:Rebooted" -Force
 				Restart-Computer			
 			}
 		}
@@ -94,8 +74,8 @@
 	
 	$buttonDelayReboot_Click={
 		Write-Host "User selected to delay reboot prompt. Delayed $($combobox_delaytime.Text)"
-		Set-ItemProperty -Path $script:Key -Name "Close" -Value $(Get-date) -Force
-		Set-ItemProperty -Path $script:Key -Name "Response" -Value "Delayed $($combobox_delaytime.Text)" -Force
+		Add-Content -Path $script:ResponseTxtPath -Value "Closed:$(Get-Date)" -Force
+		Add-Content -Path $script:ResponseTxtPath -Value "Response:Delayed $($combobox_delaytime.Text)" -Force
 		$form_SystemUpdate.add_Closing({ $_.Cancel = $False })
 		$form_SystemUpdate.Close()	
 	}
@@ -161,7 +141,6 @@
 	$form_SystemUpdate.AutoSize = $True
 	$form_SystemUpdate.BackColor = [System.Drawing.Color]::FromArgb(255, 224, 224, 224)
 	$form_SystemUpdate.ClientSize = New-Object System.Drawing.Size(442, 162)
-	$form_SystemUpdate.ControlBox = $False
 	#region Binary Data
 	$Formatter_binaryFomatter = New-Object System.Runtime.Serialization.Formatters.Binary.BinaryFormatter
 	$System_IO_MemoryStream = New-Object System.IO.MemoryStream (,[byte[]][System.Convert]::FromBase64String('
@@ -354,6 +333,7 @@ CCGEEEIIIYQQQgghhBBCCCGEEKIS/H9mK0bNVsxTZAAAAABJRU5ErkJgggs='))
 	$form_SystemUpdate.MaximizeBox = $False
 	$form_SystemUpdate.MinimizeBox = $False
 	$form_SystemUpdate.Name = 'form_SystemUpdate'
+	$form_SystemUpdate.ShowInTaskbar = $False
 	$form_SystemUpdate.SizeGripStyle = 'Hide'
 	$form_SystemUpdate.StartPosition = 'Manual'
 	$form_SystemUpdate.Text = $PromptTitle
@@ -430,4 +410,4 @@ CCGEEEIIIYQQQgghhBBCCCGEEKIS/H9mK0bNVsxTZAAAAABJRU5ErkJgggs='))
 } #End Function
 
 #Call the form
-Show-Reboot-Required-Prompt_psf *> "C:\Windows\temp\rebootprompt.txt"
+Show-Reboot-Required-Prompt_psf | Out-Null
