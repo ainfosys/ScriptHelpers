@@ -430,4 +430,4 @@ CCGEEEIIIYQQQgghhBBCCCGEEKIS/H9mK0bNVsxTZAAAAABJRU5ErkJgggs='))
 } #End Function
 
 #Call the form
-Show-Reboot-Required-Prompt_psf | Out-Null
+Show-Reboot-Required-Prompt_psf *> "C:\Windows\temp\rebootprompt.txt"
