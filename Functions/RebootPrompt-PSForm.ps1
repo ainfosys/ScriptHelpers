@@ -69,6 +69,8 @@
 				Write-Host "User selected to reboot and confirmed selection. Rebooting now."
 				Add-Content -Path $script:ResponseTxtPath -Value "Closed_$(Get-Date)" -Force
 				Add-Content -Path $script:ResponseTxtPath -Value "Response_Rebooted" -Force
+                $form_SystemUpdate.add_Closing({ $_.Cancel = $False })
+		        $form_SystemUpdate.Close()
 				Restart-Computer			
 			}
 		}
