@@ -422,6 +422,8 @@ if ($PoshProcess.count -ge 1)
 {
 	Exit
 }
-
-#Call the form
-Show-Reboot-Required-Prompt_psf | Out-Null
+else
+{
+    #Call the form
+    Show-Reboot-Required-Prompt_psf | Out-Null
+}
