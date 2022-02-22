@@ -45,7 +45,7 @@
 			{
 				if ($process.commandline -ilike "*Reboot-Prompt*")
 				{
-					$form_SystemUpdate.Close()
+					#$form_SystemUpdate.Close()
 					Exit
 				}	
 			}	
