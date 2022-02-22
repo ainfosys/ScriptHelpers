@@ -37,20 +37,7 @@
 		
 		# Quick fix for accidentally calling multiple times
 		# Check if the prompt is already running via the command line arguments
-		$PoshProcess = Get-CimInstance -Class Win32_Process -Filter "Name='PowerShell.EXE'"
-		$boolCheck = [bool]$PoshProcess
-		if ($boolCheck)
-		{
-			foreach ($process in $PoshProcess)
-			{
-				if ($process.commandline -ilike "*Reboot-Prompt*")
-				{
-					#$form_SystemUpdate.Close()
-					Exit
-				}	
-			}	
-		}
-		
+        [Console]::Title= "Reboot Prompt"
 		# Set the initial location of the powershell form to the bottom right hand corner of the primary monitor
 		# Idea is to mimic toast notifications
 		$PrimaryDisplayBounds = [System.Windows.Forms.Screen]::AllScreens | Where { $_.Primary -eq $True } | select -expand Bounds
