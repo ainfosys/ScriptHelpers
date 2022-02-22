@@ -420,9 +420,15 @@ $PromptProcess = Get-CimInstance -Class Win32_Process -Filter "Name='PowerShell.
 # when the script is excuted it will be included within the process count	
 if ($PromptProcess.count -ge 1)
 {
+    Write-output "Processes matching criteria - Process ID: $($PoshProcess.ProcessId)"
+    Write-Output "This script's PID: $PID"
+    Write-Output "$($PromptProcess.count)"
 	Exit
 }
 else
 {
+    Write-output "Processes matching criteria - Process ID: $($PoshProcess.ProcessId)"
+    Write-Output "This script's PID: $PID"
+    Write-Output "$($PromptProcess.count)"
     Show-Reboot-Required-Prompt_psf | Out-Null
 }
