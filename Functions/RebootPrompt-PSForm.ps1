@@ -1,5 +1,5 @@
 ﻿function Show-Reboot-Required-Prompt_psf {
-    
+
         param
     (
 	    [parameter(Mandatory = $false)]
@@ -25,7 +25,7 @@
 	$combobox_delaytime = New-Object 'System.Windows.Forms.ComboBox'
 	$buttonDelayReboot = New-Object 'System.Windows.Forms.Button'
 	$button_RebootNow = New-Object 'System.Windows.Forms.Button'
-	$labelAnImportantUpdateHas = New-Object 'System.Windows.Forms.Label'
+	$labelPromptMessage = New-Object 'System.Windows.Forms.Label'
 	$InitialFormWindowState = New-Object 'System.Windows.Forms.FormWindowState'
 	#endregion Generated Form Objects
 
@@ -34,7 +34,7 @@
 	#----------------------------------------------
 	
 	$form_SystemUpdate_Load = {
-
+			
 		# Set the initial location of the powershell form to the bottom right hand corner of the primary monitor
 		# Idea is to mimic toast notifications
 		$PrimaryDisplayBounds = [System.Windows.Forms.Screen]::AllScreens | Where { $_.Primary -eq $True } | select -expand Bounds
@@ -138,10 +138,9 @@
 	$form_SystemUpdate.Controls.Add($combobox_delaytime)
 	$form_SystemUpdate.Controls.Add($buttonDelayReboot)
 	$form_SystemUpdate.Controls.Add($button_RebootNow)
-	$form_SystemUpdate.Controls.Add($labelAnImportantUpdateHas)
+	$form_SystemUpdate.Controls.Add($labelPromptMessage)
 	$form_SystemUpdate.AutoScaleDimensions = New-Object System.Drawing.SizeF(96, 96)
 	$form_SystemUpdate.AutoScaleMode = 'Dpi'
-	$form_SystemUpdate.AutoSize = $True
 	$form_SystemUpdate.BackColor = [System.Drawing.Color]::FromArgb(255, 224, 224, 224)
 	$form_SystemUpdate.ClientSize = New-Object System.Drawing.Size(442, 162)
 	#region Binary Data
@@ -339,7 +338,7 @@ CCGEEEIIIYQQQgghhBBCCCGEEKIS/H9mK0bNVsxTZAAAAABJRU5ErkJgggs='))
 	$form_SystemUpdate.ShowInTaskbar = $False
 	$form_SystemUpdate.SizeGripStyle = 'Hide'
 	$form_SystemUpdate.StartPosition = 'Manual'
-	$form_SystemUpdate.Text = $PromptTitle
+	$form_SystemUpdate.Text = "$PromptTitle"
 	$form_SystemUpdate.TopMost = $True
 	$form_SystemUpdate.add_Load($form_SystemUpdate_Load)
 	#
@@ -385,17 +384,17 @@ CCGEEEIIIYQQQgghhBBCCCGEEKIS/H9mK0bNVsxTZAAAAABJRU5ErkJgggs='))
 	$button_RebootNow.UseVisualStyleBackColor = $False
 	$button_RebootNow.add_Click($button_RebootNow_Click)
 	#
-	# labelAnImportantUpdateHas
+	# labelPromptMessage
 	#
-	$labelAnImportantUpdateHas.BackColor = [System.Drawing.Color]::FromArgb(255, 224, 224, 224)
-	$labelAnImportantUpdateHas.Font = [System.Drawing.Font]::new('Microsoft Sans Serif', '11.25')
-	$labelAnImportantUpdateHas.ForeColor = [System.Drawing.Color]::Black 
-	$labelAnImportantUpdateHas.Location = New-Object System.Drawing.Point(12, 13)
-	$labelAnImportantUpdateHas.Name = 'labelAnImportantUpdateHas'
-	$labelAnImportantUpdateHas.Size = New-Object System.Drawing.Size(418, 100)
-	$labelAnImportantUpdateHas.TabIndex = 2
-	$labelAnImportantUpdateHas.Text = $PromptMessage
-	$labelAnImportantUpdateHas.TextAlign = 'MiddleCenter'
+	$labelPromptMessage.BackColor = [System.Drawing.Color]::FromArgb(255, 224, 224, 224)
+	$labelPromptMessage.Font = [System.Drawing.Font]::new('Microsoft Sans Serif', '11.25')
+	$labelPromptMessage.ForeColor = [System.Drawing.Color]::Black 
+	$labelPromptMessage.Location = New-Object System.Drawing.Point(12, 13)
+	$labelPromptMessage.Name = 'labelPromptMessage'
+	$labelPromptMessage.Size = New-Object System.Drawing.Size(418, 100)
+	$labelPromptMessage.TabIndex = 2
+	$labelPromptMessage.Text = "$PromptMessage"
+	$labelPromptMessage.TextAlign = 'MiddleCenter'
 	$form_SystemUpdate.ResumeLayout()
 	#endregion Generated Form Code
 
@@ -415,11 +414,12 @@ CCGEEEIIIYQQQgghhBBCCCGEEKIS/H9mK0bNVsxTZAAAAABJRU5ErkJgggs='))
 $PromptProcess = Get-CimInstance -Class Win32_Process -Filter "Name='PowerShell.EXE'" | Where {$_.CommandLine -ilike "*Reboot-Prompt.ps1*"}
 
 if($($PromptProcess.count) -lt 1){
-    Show-Reboot-Required-Prompt_psf | Out-Null
+
+   Show-Reboot-Required-Prompt_psf | Out-Null
 }
 Elseif($($PromptProcess.count) -ge 1){
-    Write-Output "already running"
-}
-else{
-    Write-Output "I am confused"
+   # Prompt already running
+   Write-Output "The prompt is already running but automate is poorly made and called the script again"
+   Stop-Process -Id $PromptProcess.ProcessId
+   Show-Reboot-Required-Prompt_psf | Out-Null
 }
