@@ -36,8 +36,13 @@
 	$form_SystemUpdate_Load = {
 		
 		# Quick fix for accidentally calling multiple times
-		# Check if the prompt is already running via the command line arguments
-        [Console]::Title= "Reboot Prompt"
+	    # Check if the prompt is already running via the command line arguments
+	    $PoshProcess = Get-CimInstance -Class Win32_Process -Filter "Name='PowerShell.EXE'"
+	
+	    if ($PoshProcess.commandline -ilike "*Reboot-Prompt*")
+	    {
+		    Exit	
+	    }
 		# Set the initial location of the powershell form to the bottom right hand corner of the primary monitor
 		# Idea is to mimic toast notifications
 		$PrimaryDisplayBounds = [System.Windows.Forms.Screen]::AllScreens | Where { $_.Primary -eq $True } | select -expand Bounds
