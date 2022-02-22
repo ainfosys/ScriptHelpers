@@ -418,7 +418,7 @@ CCGEEEIIIYQQQgghhBBCCCGEEKIS/H9mK0bNVsxTZAAAAABJRU5ErkJgggs='))
 $PromptProcess = Get-CimInstance -Class Win32_Process -Filter "Name='PowerShell.EXE'" | Where {$_.CommandLine -ilike "*Reboot-Prompt*"}
 
 # when the script is excuted it will be included within the process count	
-if ($PoshProcess.count -ge 2)
+if ($PoshProcess.count -ge 1)
 {
 	Exit	
 }
