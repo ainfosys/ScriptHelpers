@@ -412,20 +412,14 @@ CCGEEEIIIYQQQgghhBBCCCGEEKIS/H9mK0bNVsxTZAAAAABJRU5ErkJgggs='))
 
 } #End Function
 
-		
-# Quick fix for accidentally calling multiple times
-# Check if the prompt is already running via the command line arguments
-$PromptProcess = Get-CimInstance -Class Win32_Process -Filter "Name='PowerShell.EXE'" | Where {$_.CommandLine -ilike "*Reboot-Prompt*"}
+$PromptProcess = Get-CimInstance -Class Win32_Process -Filter "Name='PowerShell.EXE'" | Where {$_.CommandLine -ilike "*Reboot-Prompt.ps1*"}
 
-# when the script is excuted it will be included within the process count	
-if ($PromptProcess.count -ge 1)
-{
-    Write-Output $PromptProcess
-	Exit
-}
-else
-{
-
-    Write-Output $PromptProcess
+if($($PromptProcess.count) -lt 1){
     Show-Reboot-Required-Prompt_psf | Out-Null
+}
+Elseif($($PromptProcess.count) -ge 1){
+    Write-Output "already running"
+}
+else{
+    Write-Output "I am confused"
 }
