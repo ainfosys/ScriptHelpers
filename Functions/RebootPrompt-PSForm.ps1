@@ -1,5 +1,6 @@
 ﻿function Show-Reboot-Required-Prompt_psf {
-    param
+    
+        param
     (
 	    [parameter(Mandatory = $false)]
         [String]
@@ -33,6 +34,22 @@
 	#----------------------------------------------
 	
 	$form_SystemUpdate_Load = {
+		
+		# Quick fix for accidentally calling multiple times
+		# Check if the prompt is already running via the command line arguments
+		$PoshProcess = Get-CimInstance -Class Win32_Process -Filter "Name='PowerShell.EXE'"
+		$boolCheck = [bool]$PoshProcess
+		if ($boolCheck)
+		{
+			foreach ($process in $PoshProcess)
+			{
+				if ($process.commandline -ilike "*Reboot-Prompt*")
+				{
+					$form_SystemUpdate.Close()
+					Exit
+				}	
+			}	
+		}
 		
 		# Set the initial location of the powershell form to the bottom right hand corner of the primary monitor
 		# Idea is to mimic toast notifications
@@ -69,8 +86,6 @@
 				Write-Host "User selected to reboot and confirmed selection. Rebooting now."
 				Add-Content -Path $script:ResponseTxtPath -Value "Closed_$(Get-Date)" -Force
 				Add-Content -Path $script:ResponseTxtPath -Value "Response_Rebooted" -Force
-                $form_SystemUpdate.add_Closing({ $_.Cancel = $False })
-		        $form_SystemUpdate.Close()
 				Restart-Computer			
 			}
 		}
