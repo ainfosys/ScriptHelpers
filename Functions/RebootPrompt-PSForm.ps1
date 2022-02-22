@@ -415,13 +415,13 @@ CCGEEEIIIYQQQgghhBBCCCGEEKIS/H9mK0bNVsxTZAAAAABJRU5ErkJgggs='))
 		
 # Quick fix for accidentally calling multiple times
 # Check if the prompt is already running via the command line arguments
-$PoshProcess = Get-CimInstance -Class Win32_Process -Filter "Name='PowerShell.EXE'"
-	
-if ($PoshProcess.commandline -ilike "*Reboot-Prompt*")
+$PromptProcess = Get-CimInstance -Class Win32_Process -Filter "Name='PowerShell.EXE'" | Where {$_.CommandLine -ilike "*Reboot-Prompt*"}
+
+# when the script is excuted it will be included within the process count	
+if ($PoshProcess.count -gt 2)
 {
 	Exit	
 }
-
 
 #Call the form
 Show-Reboot-Required-Prompt_psf | Out-Null
