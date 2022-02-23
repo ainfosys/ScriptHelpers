@@ -82,8 +82,10 @@ param
 			"YES" {
 				Write-Host "User selected to reboot and confirmed selection. Rebooting now."
 				Add-Content -Path $script:ResponseTxtPath -Value "Closed_$(Get-Date)" -Force
-				Add-Content -Path $script:ResponseTxtPath -Value "Response_Rebooted" -Force
-				Restart-Computer			
+				Add-Content -Path $script:ResponseTxtPath -Value "Response_Reboot Now" -Force
+				New-Item -Path "C:\Windows\Temp\" -Name "PromptComplete.txt" -ItemType File -Force | Out-Null
+				$form_SystemUpdate.add_Closing({ $_.Cancel = $False })
+				$form_SystemUpdate.Close()
 			}
 		}
 	}
@@ -153,8 +155,9 @@ param
 	$form_SystemUpdate.Controls.Add($buttonDelayReboot)
 	$form_SystemUpdate.Controls.Add($button_RebootNow)
 	$form_SystemUpdate.Controls.Add($labelPromptMessage)
-	$form_SystemUpdate.AutoScaleDimensions = New-Object System.Drawing.SizeF(10, 20)
-	$form_SystemUpdate.AutoScaleMode = 'Font'
+	$form_SystemUpdate.AutoScaleDimensions = New-Object System.Drawing.SizeF(144, 144)
+	$form_SystemUpdate.AutoScaleMode = 'Dpi'
+	$form_SystemUpdate.AutoSize = $True
 	$form_SystemUpdate.BackColor = [System.Drawing.Color]::FromArgb(255, 224, 224, 224)
 	$form_SystemUpdate.ClientSize = New-Object System.Drawing.Size(478, 182)
 	$form_SystemUpdate.FormBorderStyle = 'Fixed3D'
@@ -377,11 +380,12 @@ CCGEEEIIIYQQQgghhBBCCCGEEKIS/H9mK0bNVsxTZAAAAABJRU5ErkJgggs='))
 	#
 	# buttonDelayReboot
 	#
+	$buttonDelayReboot.AutoSize = $True
 	$buttonDelayReboot.BackColor = [System.Drawing.Color]::WhiteSmoke 
 	$buttonDelayReboot.Cursor = 'Hand'
 	$buttonDelayReboot.Location = New-Object System.Drawing.Point(234, 116)
 	$buttonDelayReboot.Name = 'buttonDelayReboot'
-	$buttonDelayReboot.Size = New-Object System.Drawing.Size(113, 57)
+	$buttonDelayReboot.Size = New-Object System.Drawing.Size(120, 57)
 	$buttonDelayReboot.TabIndex = 4
 	$buttonDelayReboot.Text = 'Delay Reboot'
 	$buttonDelayReboot.UseVisualStyleBackColor = $False
@@ -389,6 +393,7 @@ CCGEEEIIIYQQQgghhBBCCCGEEKIS/H9mK0bNVsxTZAAAAABJRU5ErkJgggs='))
 	#
 	# button_RebootNow
 	#
+	$button_RebootNow.AutoSize = $True
 	$button_RebootNow.BackColor = [System.Drawing.Color]::WhiteSmoke 
 	$button_RebootNow.Cursor = 'Hand'
 	$button_RebootNow.Location = New-Object System.Drawing.Point(353, 116)
@@ -401,12 +406,14 @@ CCGEEEIIIYQQQgghhBBCCCGEEKIS/H9mK0bNVsxTZAAAAABJRU5ErkJgggs='))
 	#
 	# labelPromptMessage
 	#
+	$labelPromptMessage.AutoEllipsis = $True
+	$labelPromptMessage.AutoSize = $True
 	$labelPromptMessage.BackColor = [System.Drawing.Color]::FromArgb(255, 224, 224, 224)
 	$labelPromptMessage.Font = [System.Drawing.Font]::new('Microsoft Sans Serif', '11.25')
 	$labelPromptMessage.ForeColor = [System.Drawing.Color]::Black 
-	$labelPromptMessage.Location = New-Object System.Drawing.Point(12, 13)
+	$labelPromptMessage.Location = New-Object System.Drawing.Point(12, 9)
 	$labelPromptMessage.Name = 'labelPromptMessage'
-	$labelPromptMessage.Size = New-Object System.Drawing.Size(454, 100)
+	$labelPromptMessage.Size = New-Object System.Drawing.Size(203, 29)
 	$labelPromptMessage.TabIndex = 2
 	$labelPromptMessage.Text = "$PromptMessage"
 	$labelPromptMessage.TextAlign = 'MiddleCenter'
