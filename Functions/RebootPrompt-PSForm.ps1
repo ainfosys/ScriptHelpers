@@ -70,16 +70,16 @@ param
 		
 		if (Test-Path $ResponseTxtPath)
 		{
-			Remove-Item -Path $ResponseTxtPath -Force
-			New-Item -Path "C:\Windows\temp" -Name "rebootpromptresponse.txt" -ItemType File -Force
-			Add-Content -path $ResponseTxtPath -Value "Open_$StartTime"
-			Add-Content -Path $ResponseTxtPath -Value $RunCount
+		
+			$Content = Get-Content -Path $ResponseTxtPath
+			$newContent = $Content -replace "$RunCount", "$($RunCount++)"
+			Set-Content -Path $ResponseTxtPath -Value $newContent -Force
 		}
 		else
 		{
-			$Content = Get-Content -Path $ResponseTxtPath
-			$newContent = $Content -replace "$RunCount", "$($RunCount++)"
-			Set-Content -Path $ResponseTxtPath -Value $newContent -Force		
+			New-Item -Path "C:\Windows\temp" -Name "rebootpromptresponse.txt" -ItemType File -Force
+			Add-Content -path $ResponseTxtPath -Value "Open_$StartTime"
+			Add-Content -Path $ResponseTxtPath -Value $RunCount		
 		}
 	}
 	
@@ -432,10 +432,6 @@ CCGEEEIIIYQQQgghhBBCCCGEEKIS/H9mK0bNVsxTZAAAAABJRU5ErkJgggs='))
 	return $form_SystemUpdate.ShowDialog()
 
 } #End Function
-
-#Call the form
-Show-Reboot-Required-Prompt_psf | Out-Null
-
 
 $PromptProcess = Get-CimInstance -Class Win32_Process -Filter "Name='PowerShell.EXE'" | Where {$_.CommandLine -ilike "*Reboot-Prompt.ps1*"}
 $Script:ResponseTxtPath = "C:\Windows\temp\rebootpromptresponse.txt"
