@@ -3,9 +3,6 @@
 	    [parameter(Mandatory = $false)]
         [String]
 	    $PromptTitle = 'System Update',
-	    [parameter(Mandatory = $false)]
-        [int]
-	    $RunCount,
         [parameter(Mandatory = $false)]
         [String]
 	    $PromptMessage = 'An important update has been applied to your computer. Please save an close any open work and press the "Reboot now" button to restart the computer. If now isn''t a good time select how long you would like to delay the reboot prompt and press the "Delay Reboot" button.'
@@ -444,8 +441,9 @@ $PromptProcess = Get-CimInstance -Class Win32_Process -Filter "Name='PowerShell.
 $Script:ResponseTxtPath = "C:\Windows\temp\rebootpromptresponse.txt"
 
 if($($PromptProcess.count) -lt 1){
-    
-   Show-Reboot-Required-Prompt_psf -PromptTitle $PromptTitle -PromptMessage $PromptMessage -RunCount 1 | Out-Null
+
+   $RunCount = 1 
+   Show-Reboot-Required-Prompt_psf -PromptTitle $PromptTitle -PromptMessage $PromptMessage -RunCount $RunCount | Out-Null
 }
 Elseif($($PromptProcess.count) -ge 1){
    # Prompt already running
