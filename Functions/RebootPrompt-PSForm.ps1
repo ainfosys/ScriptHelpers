@@ -20,7 +20,6 @@ param
 	    $PromptMessage = 'An important update has been applied to your computer. Please save an close any open work and press the "Reboot now" button to restart the computer. If now isn''t a good time select how long you would like to delay the reboot prompt and press the "Delay Reboot" button.'
 )
 
-
 	#----------------------------------------------
 	#region Import the Assemblies
 	#----------------------------------------------
@@ -51,8 +50,8 @@ param
 		# Set the initial location of the powershell form to the bottom right hand corner of the primary monitor
 		# Idea is to mimic toast notifications
 		$PrimaryDisplayBounds = [System.Windows.Forms.Screen]::AllScreens | Where { $_.Primary -eq $True } | select -expand Bounds
-		$XPos = $PrimaryDisplayBounds.Right - "451"
-		$YPos = $PrimaryDisplayBounds.Bottom - "235"
+		$XPos = $PrimaryDisplayBounds.Right - "505"
+		$YPos = $PrimaryDisplayBounds.Bottom - "307"
 		$formWidth = $form_SystemUpdate.Width
 		$FormHeight = $form_SystemUpdate.Height
 		$form_SystemUpdate.SetBounds($XPos, $YPos, $formWidth, $FormHeight)
@@ -408,7 +407,7 @@ CCGEEEIIIYQQQgghhBBCCCGEEKIS/H9mK0bNVsxTZAAAAABJRU5ErkJgggs='))
 	#
 	$labelPromptMessage.AutoEllipsis = $True
 	$labelPromptMessage.BackColor = [System.Drawing.Color]::FromArgb(255, 224, 224, 224)
-	$labelPromptMessage.Font = [System.Drawing.Font]::new('Microsoft Sans Serif', '11.25')
+	$labelPromptMessage.Font = [System.Drawing.Font]::new('Microsoft Sans Serif', '10')
 	$labelPromptMessage.ForeColor = [System.Drawing.Color]::Black 
 	$labelPromptMessage.Location = New-Object System.Drawing.Point(12, 9)
 	$labelPromptMessage.Name = 'labelPromptMessage'
