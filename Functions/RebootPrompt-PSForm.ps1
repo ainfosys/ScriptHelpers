@@ -1,13 +1,30 @@
-﻿function Show-Reboot-Required-Prompt_psf {
-        param
-    (
+﻿param
+(
 	    [parameter(Mandatory = $false)]
         [String]
 	    $PromptTitle = 'System Update',
+	    [parameter(Mandatory = $false)]
+        [int]
+	    $RunCount,
         [parameter(Mandatory = $false)]
         [String]
 	    $PromptMessage = 'An important update has been applied to your computer. Please save an close any open work and press the "Reboot now" button to restart the computer. If now isn''t a good time select how long you would like to delay the reboot prompt and press the "Delay Reboot" button.'
-    )
+)
+
+function Show-Reboot-Required-Prompt_psf {
+
+param
+(
+	    [parameter(Mandatory = $false)]
+        [String]
+	    $PromptTitle = 'System Update',
+	    [parameter(Mandatory = $false)]
+        [int]
+	    $RunCount,
+        [parameter(Mandatory = $false)]
+        [String]
+	    $PromptMessage = 'An important update has been applied to your computer. Please save an close any open work and press the "Reboot now" button to restart the computer. If now isn''t a good time select how long you would like to delay the reboot prompt and press the "Delay Reboot" button.'
+)
 
 	#----------------------------------------------
 	#region Import the Assemblies
@@ -25,7 +42,6 @@
 	$buttonDelayReboot = New-Object 'System.Windows.Forms.Button'
 	$button_RebootNow = New-Object 'System.Windows.Forms.Button'
 	$labelPromptMessage = New-Object 'System.Windows.Forms.Label'
-	$timer1 = New-Object 'System.Windows.Forms.Timer'
 	$InitialFormWindowState = New-Object 'System.Windows.Forms.FormWindowState'
 	#endregion Generated Form Objects
 
@@ -36,7 +52,6 @@
 	$form_SystemUpdate_Load = {
 		
 		[DateTime]$Script:StartTime = Get-date
-		$timer1.Start()
 			
 		# Set the initial location of the powershell form to the bottom right hand corner of the primary monitor
 		# Idea is to mimic toast notifications
@@ -58,11 +73,17 @@
 		
 		if (Test-Path $ResponseTxtPath)
 		{
-				Remove-Item -Path $ResponseTxtPath -Force
+			Remove-Item -Path $ResponseTxtPath -Force
+			New-Item -Path "C:\Windows\temp" -Name "rebootpromptresponse.txt" -ItemType File -Force
+			Add-Content -path $ResponseTxtPath -Value "Open_$StartTime"
+			Add-Content -Path $ResponseTxtPath -Value $RunCount
 		}
-		
-		New-Item -Path "C:\Windows\temp" -Name "rebootpromptresponse.txt" -ItemType File -Force
-		Add-Content -path $ResponseTxtPath -Value "Open_$StartTime"
+		else
+		{
+			$Content = Get-Content -Path $ResponseTxtPath
+			$newContent = $Content -replace "$RunCount", "$($RunCount++)"
+			Set-Content -Path $ResponseTxtPath -Value $newContent -Force		
+		}
 	}
 	
 	$button_RebootNow_Click={
@@ -104,25 +125,6 @@
 			}		
 		}
 	}
-	$timer1_Tick={
-		
-		[TimeSpan]$span = (Get-Date) - $script:StartTime
-		if ($($span.Minutes) -ne $PreviousMinute)
-		{
-			$PreviousMinute = $span.Minutes
-			# trying to trick automate into thinking this script isn't hung or frozen
-			$form_SystemUpdate.Activate()
-			$form_SystemUpdate.BackColor = 'Yellow'
-			Start-Sleep -s 2
-			$form_SystemUpdate.BackColor = "224, 224, 224"
-			Start-Sleep -s 2
-			$form_SystemUpdate.BackColor = 'Yellow'
-			Start-Sleep -s 2
-			$form_SystemUpdate.BackColor = "224, 224, 224"
-		}
-		
-	}
-	
 	# --End User Generated Script--
 	#----------------------------------------------
 	#region Generated Events
@@ -143,7 +145,6 @@
 			$buttonDelayReboot.remove_Click($buttonDelayReboot_Click)
 			$button_RebootNow.remove_Click($button_RebootNow_Click)
 			$form_SystemUpdate.remove_Load($form_SystemUpdate_Load)
-			$timer1.remove_Tick($timer1_Tick)
 			$form_SystemUpdate.remove_Load($Form_StateCorrection_Load)
 			$form_SystemUpdate.remove_FormClosed($Form_Cleanup_FormClosed)
 		}
@@ -419,10 +420,6 @@ CCGEEEIIIYQQQgghhBBCCCGEEKIS/H9mK0bNVsxTZAAAAABJRU5ErkJgggs='))
 	$labelPromptMessage.TabIndex = 2
 	$labelPromptMessage.Text = "$PromptMessage"
 	$labelPromptMessage.TextAlign = 'MiddleCenter'
-	#
-	# timer1
-	#
-	$timer1.add_Tick($timer1_Tick)
 	$form_SystemUpdate.ResumeLayout()
 	#endregion Generated Form Code
 
@@ -439,15 +436,25 @@ CCGEEEIIIYQQQgghhBBCCCGEEKIS/H9mK0bNVsxTZAAAAABJRU5ErkJgggs='))
 
 } #End Function
 
+#Call the form
+Show-Reboot-Required-Prompt_psf | Out-Null
+
+
 $PromptProcess = Get-CimInstance -Class Win32_Process -Filter "Name='PowerShell.EXE'" | Where {$_.CommandLine -ilike "*Reboot-Prompt.ps1*"}
+$Script:ResponseTxtPath = "C:\Windows\temp\rebootpromptresponse.txt"
 
 if($($PromptProcess.count) -lt 1){
-
-   Show-Reboot-Required-Prompt_psf | Out-Null
+    
+   Show-Reboot-Required-Prompt_psf -PromptTitle $PromptTitle -PromptMessage $PromptMessage -RunCount 1 | Out-Null
 }
 Elseif($($PromptProcess.count) -ge 1){
    # Prompt already running
-   Write-Output "The prompt is already running but automate is poorly made and called the script again"
+
+   if(Test-Path $Script:ResponseTxtPath){
+        $RunCount = Get-Content -Path $Script:ResponseTxtPath | select -last 1
+   }
+
+   Write-Output "The prompt is already running but automate is poorly made and called the script again. Occurs every 10 minutes with no response."
    Stop-Process -Id $PromptProcess.ProcessId
-   Show-Reboot-Required-Prompt_psf | Out-Null
+   Show-Reboot-Required-Prompt_psf -PromptTitle $PromptTitle -PromptMessage $PromptMessage -RunCount $RunCount | Out-Null
 }
