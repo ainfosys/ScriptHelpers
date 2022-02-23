@@ -15,13 +15,11 @@ param
 	    [parameter(Mandatory = $false)]
         [String]
 	    $PromptTitle = 'System Update',
-	    [parameter(Mandatory = $false)]
-        [int]
-	    $RunCount,
         [parameter(Mandatory = $false)]
         [String]
 	    $PromptMessage = 'An important update has been applied to your computer. Please save an close any open work and press the "Reboot now" button to restart the computer. If now isn''t a good time select how long you would like to delay the reboot prompt and press the "Delay Reboot" button.'
 )
+
 
 	#----------------------------------------------
 	#region Import the Assemblies
@@ -71,16 +69,10 @@ param
 		if (Test-Path $ResponseTxtPath)
 		{
 		
-			$Content = Get-Content -Path $ResponseTxtPath
-			$newContent = $($Content | select -Last 1) -replace ".*","$($RunCount++)"
-			Set-Content -Path $ResponseTxtPath -Value $newContent -Force
+			Remove-Item -Path $ResponseTxtPath -Force
 		}
-		else
-		{
-			New-Item -Path "C:\Windows\temp" -Name "rebootpromptresponse.txt" -ItemType File -Force
-			Add-Content -path $ResponseTxtPath -Value "Open_$StartTime"
-			Add-Content -Path $ResponseTxtPath -Value $RunCount		
-		}
+		New-Item -Path "C:\Windows\temp" -Name "rebootpromptresponse.txt" -ItemType File -Force
+		Add-Content -path $ResponseTxtPath -Value "Open_$StartTime"
 	}
 	
 	$button_RebootNow_Click={
@@ -100,6 +92,7 @@ param
 		Write-Host "User selected to delay reboot prompt. Delayed $($combobox_delaytime.Text)"
 		Add-Content -Path $script:ResponseTxtPath -Value "Closed_$(Get-Date)" -Force
 		Add-Content -Path $script:ResponseTxtPath -Value "Response_Delayed $($combobox_delaytime.Text)" -Force
+		New-Item -Path "C:\Windows\Temp\" -Name "PromptComplete.txt" -ItemType File -Force | Out-Null
 		$form_SystemUpdate.add_Closing({ $_.Cancel = $False })
 		$form_SystemUpdate.Close()	
 	}
@@ -434,22 +427,13 @@ CCGEEEIIIYQQQgghhBBCCCGEEKIS/H9mK0bNVsxTZAAAAABJRU5ErkJgggs='))
 } #End Function
 
 $PromptProcess = Get-CimInstance -Class Win32_Process -Filter "Name='PowerShell.EXE'" | Where {$_.CommandLine -ilike "*Reboot-Prompt.ps1*"}
-$Script:ResponseTxtPath = "C:\Windows\temp\rebootpromptresponse.txt"
 
 if($($PromptProcess.count) -lt 1){
 
-   $RunCount = 1 
-   Show-Reboot-Required-Prompt_psf -PromptTitle $PromptTitle -PromptMessage $PromptMessage -RunCount $RunCount | Out-Null
+   Show-Reboot-Required-Prompt_psf -PromptTitle $PromptTitle -PromptMessage $PromptMessage | Out-Null
 }
 Elseif($($PromptProcess.count) -ge 1){
    # Prompt already running
-
-   if(Test-Path $Script:ResponseTxtPath){
-        $RunCount = Get-Content -Path $Script:ResponseTxtPath | select -last 1
-   }
-
    Write-Output "The prompt is already running but automate is poorly made and called the script again. Occurs every 10 minutes or so with no response."
-   # wait a little and then close the existing prompt. This allows the new prompt to load in time to replace the removed prompt
-   Start-job -ScriptBlock { start-sleep -s 5; Stop-Process -Id $PromptProcess.ProcessId -Force }
-   Show-Reboot-Required-Prompt_psf -PromptTitle $PromptTitle -PromptMessage $PromptMessage -RunCount $RunCount | Out-Null
+
 }
