@@ -562,9 +562,9 @@ $PromptProcess = Get-CimInstance -Class Win32_Process -Filter "Name='PowerShell.
 
 if($($PromptProcess.count) -lt 1){
    
-   InstallOrUpdateModule -ModuleName RunAsUser
-
-   Invoke-AsCurrentUser -scriptblock {
+   InstallOrUpdateModule -ModuleName RunAsUser -ErrorAction Stop
+   Import-Module -Name RunAsUser -ErrorAction Stop
+   Invoke-AsCurrentUser -NoWait -UseWindowsPowerShell -ScriptBlock {
         Show-Reboot-Required-Prompt_psf -PromptTitle $PromptTitle -PromptMessage $PromptMessage | Out-Null
     }
 }
