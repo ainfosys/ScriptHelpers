@@ -72,7 +72,7 @@ param
 		{
 		
 			$Content = Get-Content -Path $ResponseTxtPath
-			$newContent = $Content -replace "$RunCount", "$($RunCount++)"
+			$newContent = $($Content | select -Last 1) -replace ".*","$($RunCount++)"
 			Set-Content -Path $ResponseTxtPath -Value $newContent -Force
 		}
 		else
@@ -448,7 +448,8 @@ Elseif($($PromptProcess.count) -ge 1){
         $RunCount = Get-Content -Path $Script:ResponseTxtPath | select -last 1
    }
 
-   Write-Output "The prompt is already running but automate is poorly made and called the script again. Occurs every 10 minutes with no response."
-   Stop-Process -Id $PromptProcess.ProcessId
+   Write-Output "The prompt is already running but automate is poorly made and called the script again. Occurs every 10 minutes or so with no response."
+   # wait a little and then close the existing prompt. This allows the new prompt to load in time to replace the removed prompt
+   Start-job -ScriptBlock { start-sleep -s 5; Stop-Process -Id $PromptProcess.ProcessId -Force }
    Show-Reboot-Required-Prompt_psf -PromptTitle $PromptTitle -PromptMessage $PromptMessage -RunCount $RunCount | Out-Null
 }
