@@ -111,9 +111,14 @@
 		{
 			$PreviousMinute = $span.Minutes
 			# trying to trick automate into thinking this script isn't hung or frozen
-			New-Item -Path "C:\Windows\Temp\" -ItemType File -Name "temp.txt" -Force | Out-Null
-			Add-Content -Path "C:\Windows\Temp\temp.txt" -Value "Testing" -Force
-			Remove-Item -Path "C:\Windows\Temp\temp.txt" -Force | Out-Null
+			$form_SystemUpdate.Activate()
+			$form_SystemUpdate.BackColor = 'Yellow'
+			Start-Sleep -s 2
+			$form_SystemUpdate.BackColor = "224, 224, 224"
+			Start-Sleep -s 2
+			$form_SystemUpdate.BackColor = 'Yellow'
+			Start-Sleep -s 2
+			$form_SystemUpdate.BackColor = "224, 224, 224"
 		}
 		
 	}
@@ -161,6 +166,7 @@
 	$form_SystemUpdate.AutoScaleMode = 'Font'
 	$form_SystemUpdate.BackColor = [System.Drawing.Color]::FromArgb(255, 224, 224, 224)
 	$form_SystemUpdate.ClientSize = New-Object System.Drawing.Size(478, 182)
+	$form_SystemUpdate.FormBorderStyle = 'Fixed3D'
 	#region Binary Data
 	$Formatter_binaryFomatter = New-Object System.Runtime.Serialization.Formatters.Binary.BinaryFormatter
 	$System_IO_MemoryStream = New-Object System.IO.MemoryStream (,[byte[]][System.Convert]::FromBase64String('
