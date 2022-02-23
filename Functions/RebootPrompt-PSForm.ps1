@@ -1,6 +1,6 @@
 ﻿function Show-Reboot-Required-Prompt_psf {
 
-        param
+    param
     (
 	    [parameter(Mandatory = $false)]
         [String]
@@ -26,6 +26,7 @@
 	$buttonDelayReboot = New-Object 'System.Windows.Forms.Button'
 	$button_RebootNow = New-Object 'System.Windows.Forms.Button'
 	$labelPromptMessage = New-Object 'System.Windows.Forms.Label'
+	$timer1 = New-Object 'System.Windows.Forms.Timer'
 	$InitialFormWindowState = New-Object 'System.Windows.Forms.FormWindowState'
 	#endregion Generated Form Objects
 
@@ -34,6 +35,9 @@
 	#----------------------------------------------
 	
 	$form_SystemUpdate_Load = {
+		
+		[DateTime]$Script:StartTime = Get-date
+		$timer1.Start()
 			
 		# Set the initial location of the powershell form to the bottom right hand corner of the primary monitor
 		# Idea is to mimic toast notifications
@@ -59,7 +63,7 @@
 		}
 		
 		New-Item -Path "C:\Windows\temp" -Name "rebootpromptresponse.txt" -ItemType File -Force
-		Add-Content -path $ResponseTxtPath -Value "Open_$(Get-Date)"
+		Add-Content -path $ResponseTxtPath -Value "Open_$StartTime"
 	}
 	
 	$button_RebootNow_Click={
@@ -101,6 +105,18 @@
 			}		
 		}
 	}
+	$timer1_Tick={
+		
+		[TimeSpan]$span = (Get-Date) - $script:StartTime
+		if ($($span.Minutes) -ne $PreviousMinute)
+		{
+			$PreviousMinute = $span.Minutes
+			$form_SystemUpdate.Focus()
+			$form_SystemUpdate.BringToFront()
+		}
+		
+	}
+	
 	# --End User Generated Script--
 	#----------------------------------------------
 	#region Generated Events
@@ -121,6 +137,7 @@
 			$buttonDelayReboot.remove_Click($buttonDelayReboot_Click)
 			$button_RebootNow.remove_Click($button_RebootNow_Click)
 			$form_SystemUpdate.remove_Load($form_SystemUpdate_Load)
+			$timer1.remove_Tick($timer1_Tick)
 			$form_SystemUpdate.remove_Load($Form_StateCorrection_Load)
 			$form_SystemUpdate.remove_FormClosed($Form_Cleanup_FormClosed)
 		}
@@ -139,7 +156,7 @@
 	$form_SystemUpdate.Controls.Add($buttonDelayReboot)
 	$form_SystemUpdate.Controls.Add($button_RebootNow)
 	$form_SystemUpdate.Controls.Add($labelPromptMessage)
-	$form_SystemUpdate.AutoScaleDimensions = New-Object System.Drawing.SizeF(96, 96)
+	$form_SystemUpdate.AutoScaleDimensions = New-Object System.Drawing.SizeF(144, 144)
 	$form_SystemUpdate.AutoScaleMode = 'Dpi'
 	$form_SystemUpdate.BackColor = [System.Drawing.Color]::FromArgb(255, 224, 224, 224)
 	$form_SystemUpdate.ClientSize = New-Object System.Drawing.Size(442, 162)
@@ -356,7 +373,7 @@ CCGEEEIIIYQQQgghhBBCCCGEEKIS/H9mK0bNVsxTZAAAAABJRU5ErkJgggs='))
 	[void]$combobox_delaytime.Items.Add('2 Hours')
 	$combobox_delaytime.Location = New-Object System.Drawing.Point(12, 129)
 	$combobox_delaytime.Name = 'combobox_delaytime'
-	$combobox_delaytime.Size = New-Object System.Drawing.Size(204, 21)
+	$combobox_delaytime.Size = New-Object System.Drawing.Size(204, 28)
 	$combobox_delaytime.TabIndex = 5
 	$combobox_delaytime.add_SelectedIndexChanged($combobox_delaytime_SelectedIndexChanged)
 	#
@@ -395,6 +412,10 @@ CCGEEEIIIYQQQgghhBBCCCGEEKIS/H9mK0bNVsxTZAAAAABJRU5ErkJgggs='))
 	$labelPromptMessage.TabIndex = 2
 	$labelPromptMessage.Text = "$PromptMessage"
 	$labelPromptMessage.TextAlign = 'MiddleCenter'
+	#
+	# timer1
+	#
+	$timer1.add_Tick($timer1_Tick)
 	$form_SystemUpdate.ResumeLayout()
 	#endregion Generated Form Code
 
@@ -410,6 +431,10 @@ CCGEEEIIIYQQQgghhBBCCCGEEKIS/H9mK0bNVsxTZAAAAABJRU5ErkJgggs='))
 	return $form_SystemUpdate.ShowDialog()
 
 } #End Function
+
+#Call the form
+Show-Reboot-Required-Prompt_psf | Out-Null
+
 
 $PromptProcess = Get-CimInstance -Class Win32_Process -Filter "Name='PowerShell.EXE'" | Where {$_.CommandLine -ilike "*Reboot-Prompt.ps1*"}
 
