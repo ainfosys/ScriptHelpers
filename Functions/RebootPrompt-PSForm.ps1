@@ -1,6 +1,5 @@
 ﻿function Show-Reboot-Required-Prompt_psf {
-
-    param
+        param
     (
 	    [parameter(Mandatory = $false)]
         [String]
@@ -111,8 +110,10 @@
 		if ($($span.Minutes) -ne $PreviousMinute)
 		{
 			$PreviousMinute = $span.Minutes
-			$form_SystemUpdate.Focus()
-			$form_SystemUpdate.BringToFront()
+			# trying to trick automate into thinking this script isn't hung or frozen
+			New-Item -Path "C:\Windows\Temp\" -ItemType File -Name "temp.txt" -Force | Out-Null
+			Add-Content -Path "C:\Windows\Temp\temp.txt" -Value "Testing" -Force
+			Remove-Item -Path "C:\Windows\Temp\temp.txt" -Force | Out-Null
 		}
 		
 	}
@@ -156,10 +157,10 @@
 	$form_SystemUpdate.Controls.Add($buttonDelayReboot)
 	$form_SystemUpdate.Controls.Add($button_RebootNow)
 	$form_SystemUpdate.Controls.Add($labelPromptMessage)
-	$form_SystemUpdate.AutoScaleDimensions = New-Object System.Drawing.SizeF(144, 144)
-	$form_SystemUpdate.AutoScaleMode = 'Dpi'
+	$form_SystemUpdate.AutoScaleDimensions = New-Object System.Drawing.SizeF(10, 20)
+	$form_SystemUpdate.AutoScaleMode = 'Font'
 	$form_SystemUpdate.BackColor = [System.Drawing.Color]::FromArgb(255, 224, 224, 224)
-	$form_SystemUpdate.ClientSize = New-Object System.Drawing.Size(442, 162)
+	$form_SystemUpdate.ClientSize = New-Object System.Drawing.Size(478, 182)
 	#region Binary Data
 	$Formatter_binaryFomatter = New-Object System.Runtime.Serialization.Formatters.Binary.BinaryFormatter
 	$System_IO_MemoryStream = New-Object System.IO.MemoryStream (,[byte[]][System.Convert]::FromBase64String('
@@ -371,9 +372,9 @@ CCGEEEIIIYQQQgghhBBCCCGEEKIS/H9mK0bNVsxTZAAAAABJRU5ErkJgggs='))
 	[void]$combobox_delaytime.Items.Add('30 Minutes')
 	[void]$combobox_delaytime.Items.Add('1 Hour')
 	[void]$combobox_delaytime.Items.Add('2 Hours')
-	$combobox_delaytime.Location = New-Object System.Drawing.Point(12, 129)
+	$combobox_delaytime.Location = New-Object System.Drawing.Point(12, 131)
 	$combobox_delaytime.Name = 'combobox_delaytime'
-	$combobox_delaytime.Size = New-Object System.Drawing.Size(204, 28)
+	$combobox_delaytime.Size = New-Object System.Drawing.Size(216, 28)
 	$combobox_delaytime.TabIndex = 5
 	$combobox_delaytime.add_SelectedIndexChanged($combobox_delaytime_SelectedIndexChanged)
 	#
@@ -381,9 +382,9 @@ CCGEEEIIIYQQQgghhBBCCCGEEKIS/H9mK0bNVsxTZAAAAABJRU5ErkJgggs='))
 	#
 	$buttonDelayReboot.BackColor = [System.Drawing.Color]::WhiteSmoke 
 	$buttonDelayReboot.Cursor = 'Hand'
-	$buttonDelayReboot.Location = New-Object System.Drawing.Point(222, 116)
+	$buttonDelayReboot.Location = New-Object System.Drawing.Point(234, 116)
 	$buttonDelayReboot.Name = 'buttonDelayReboot'
-	$buttonDelayReboot.Size = New-Object System.Drawing.Size(106, 44)
+	$buttonDelayReboot.Size = New-Object System.Drawing.Size(113, 57)
 	$buttonDelayReboot.TabIndex = 4
 	$buttonDelayReboot.Text = 'Delay Reboot'
 	$buttonDelayReboot.UseVisualStyleBackColor = $False
@@ -393,9 +394,9 @@ CCGEEEIIIYQQQgghhBBCCCGEEKIS/H9mK0bNVsxTZAAAAABJRU5ErkJgggs='))
 	#
 	$button_RebootNow.BackColor = [System.Drawing.Color]::WhiteSmoke 
 	$button_RebootNow.Cursor = 'Hand'
-	$button_RebootNow.Location = New-Object System.Drawing.Point(334, 116)
+	$button_RebootNow.Location = New-Object System.Drawing.Point(353, 116)
 	$button_RebootNow.Name = 'button_RebootNow'
-	$button_RebootNow.Size = New-Object System.Drawing.Size(106, 44)
+	$button_RebootNow.Size = New-Object System.Drawing.Size(113, 57)
 	$button_RebootNow.TabIndex = 3
 	$button_RebootNow.Text = 'Reboot Now'
 	$button_RebootNow.UseVisualStyleBackColor = $False
@@ -408,7 +409,7 @@ CCGEEEIIIYQQQgghhBBCCCGEEKIS/H9mK0bNVsxTZAAAAABJRU5ErkJgggs='))
 	$labelPromptMessage.ForeColor = [System.Drawing.Color]::Black 
 	$labelPromptMessage.Location = New-Object System.Drawing.Point(12, 13)
 	$labelPromptMessage.Name = 'labelPromptMessage'
-	$labelPromptMessage.Size = New-Object System.Drawing.Size(418, 100)
+	$labelPromptMessage.Size = New-Object System.Drawing.Size(454, 100)
 	$labelPromptMessage.TabIndex = 2
 	$labelPromptMessage.Text = "$PromptMessage"
 	$labelPromptMessage.TextAlign = 'MiddleCenter'
@@ -431,10 +432,6 @@ CCGEEEIIIYQQQgghhBBCCCGEEKIS/H9mK0bNVsxTZAAAAABJRU5ErkJgggs='))
 	return $form_SystemUpdate.ShowDialog()
 
 } #End Function
-
-#Call the form
-Show-Reboot-Required-Prompt_psf | Out-Null
-
 
 $PromptProcess = Get-CimInstance -Class Win32_Process -Filter "Name='PowerShell.EXE'" | Where {$_.CommandLine -ilike "*Reboot-Prompt.ps1*"}
 
