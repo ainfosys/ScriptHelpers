@@ -372,7 +372,7 @@ CCGEEEIIIYQQQgghhBBCCCGEEKIS/H9mK0bNVsxTZAAAAABJRU5ErkJgggs='))
 	[void]$combobox_delaytime.Items.Add('30 Minutes')
 	[void]$combobox_delaytime.Items.Add('1 Hour')
 	[void]$combobox_delaytime.Items.Add('2 Hours')
-	$combobox_delaytime.Location = New-Object System.Drawing.Point(12, 131)
+	$combobox_delaytime.Location = New-Object System.Drawing.Point(12, 142)
 	$combobox_delaytime.Name = 'combobox_delaytime'
 	$combobox_delaytime.Size = New-Object System.Drawing.Size(216, 28)
 	$combobox_delaytime.TabIndex = 5
@@ -383,7 +383,7 @@ CCGEEEIIIYQQQgghhBBCCCGEEKIS/H9mK0bNVsxTZAAAAABJRU5ErkJgggs='))
 	$buttonDelayReboot.AutoSize = $True
 	$buttonDelayReboot.BackColor = [System.Drawing.Color]::WhiteSmoke 
 	$buttonDelayReboot.Cursor = 'Hand'
-	$buttonDelayReboot.Location = New-Object System.Drawing.Point(234, 116)
+	$buttonDelayReboot.Location = New-Object System.Drawing.Point(234, 127)
 	$buttonDelayReboot.Name = 'buttonDelayReboot'
 	$buttonDelayReboot.Size = New-Object System.Drawing.Size(120, 57)
 	$buttonDelayReboot.TabIndex = 4
@@ -396,7 +396,7 @@ CCGEEEIIIYQQQgghhBBCCCGEEKIS/H9mK0bNVsxTZAAAAABJRU5ErkJgggs='))
 	$button_RebootNow.AutoSize = $True
 	$button_RebootNow.BackColor = [System.Drawing.Color]::WhiteSmoke 
 	$button_RebootNow.Cursor = 'Hand'
-	$button_RebootNow.Location = New-Object System.Drawing.Point(353, 116)
+	$button_RebootNow.Location = New-Object System.Drawing.Point(360, 127)
 	$button_RebootNow.Name = 'button_RebootNow'
 	$button_RebootNow.Size = New-Object System.Drawing.Size(113, 57)
 	$button_RebootNow.TabIndex = 3
@@ -407,13 +407,12 @@ CCGEEEIIIYQQQgghhBBCCCGEEKIS/H9mK0bNVsxTZAAAAABJRU5ErkJgggs='))
 	# labelPromptMessage
 	#
 	$labelPromptMessage.AutoEllipsis = $True
-	$labelPromptMessage.AutoSize = $True
 	$labelPromptMessage.BackColor = [System.Drawing.Color]::FromArgb(255, 224, 224, 224)
 	$labelPromptMessage.Font = [System.Drawing.Font]::new('Microsoft Sans Serif', '11.25')
 	$labelPromptMessage.ForeColor = [System.Drawing.Color]::Black 
 	$labelPromptMessage.Location = New-Object System.Drawing.Point(12, 9)
 	$labelPromptMessage.Name = 'labelPromptMessage'
-	$labelPromptMessage.Size = New-Object System.Drawing.Size(203, 29)
+	$labelPromptMessage.Size = New-Object System.Drawing.Size(454, 115)
 	$labelPromptMessage.TabIndex = 2
 	$labelPromptMessage.Text = "$PromptMessage"
 	$labelPromptMessage.TextAlign = 'MiddleCenter'
