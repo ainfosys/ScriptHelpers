@@ -20,6 +20,7 @@ param
 	    $PromptMessage = 'An important update has been applied to your computer. Please save an close any open work and press the "Reboot now" button to restart the computer. If now isn''t a good time select how long you would like to delay the reboot prompt and press the "Delay Reboot" button.'
 )
 
+
 	#----------------------------------------------
 	#region Import the Assemblies
 	#----------------------------------------------
@@ -50,8 +51,8 @@ param
 		# Set the initial location of the powershell form to the bottom right hand corner of the primary monitor
 		# Idea is to mimic toast notifications
 		$PrimaryDisplayBounds = [System.Windows.Forms.Screen]::AllScreens | Where { $_.Primary -eq $True } | select -expand Bounds
-		$XPos = $PrimaryDisplayBounds.Right - "505"
-		$YPos = $PrimaryDisplayBounds.Bottom - "307"
+		$XPos = $PrimaryDisplayBounds.Right - "535"
+		$YPos = $PrimaryDisplayBounds.Bottom - "327"
 		$formWidth = $form_SystemUpdate.Width
 		$FormHeight = $form_SystemUpdate.Height
 		$form_SystemUpdate.SetBounds($XPos, $YPos, $formWidth, $FormHeight)
@@ -158,7 +159,7 @@ param
 	$form_SystemUpdate.AutoScaleMode = 'Dpi'
 	$form_SystemUpdate.AutoSize = $True
 	$form_SystemUpdate.BackColor = [System.Drawing.Color]::FromArgb(255, 224, 224, 224)
-	$form_SystemUpdate.ClientSize = New-Object System.Drawing.Size(478, 182)
+	$form_SystemUpdate.ClientSize = New-Object System.Drawing.Size(515, 206)
 	$form_SystemUpdate.FormBorderStyle = 'Fixed3D'
 	#region Binary Data
 	$Formatter_binaryFomatter = New-Object System.Runtime.Serialization.Formatters.Binary.BinaryFormatter
@@ -167,7 +168,7 @@ AAEAAAD/////AQAAAAAAAAAMAgAAAFFTeXN0ZW0uRHJhd2luZywgVmVyc2lvbj00LjAuMC4wLCBD
 dWx0dXJlPW5ldXRyYWwsIFB1YmxpY0tleVRva2VuPWIwM2Y1ZjdmMTFkNTBhM2EFAQAAABNTeXN0
 ZW0uRHJhd2luZy5JY29uAgAAAAhJY29uRGF0YQhJY29uU2l6ZQcEAhNTeXN0ZW0uRHJhd2luZy5T
 aXplAgAAAAIAAAAJAwAAAAX8////E1N5c3RlbS5EcmF3aW5nLlNpemUCAAAABXdpZHRoBmhlaWdo
-dAAACAgCAAAAAAEAAAABAAAPAwAAAHknAAACAAABAAEAAAAAAAEAIABjJwAAFgAAAIlQTkcNChoK
+dAAACAgCAAAAAAAAAAAAAAAPAwAAAHknAAACAAABAAEAAAAAAAEAIABjJwAAFgAAAIlQTkcNChoK
 AAAADUlIRFIAAAEAAAABAAgGAAAAXHKoZgAAJypJREFUeNrt3XmQHNWd4PFvZtZ9V/ahbnW3pNZ9
 ovtCt9B9IaGz1d0ChDgk1BJrT9jszoxjbM/MrgcveGNivZ6YDe8fMzGeWO94PGYM2GCby9jGYLAH
 G7ANBnMahBCidbW6KvePJ81wtFSvuyoz6/h9IhSOcLyiX2ZV/jLzvd/7PRBCCCGEEEIIIYQQQggh
@@ -371,9 +372,9 @@ CCGEEEIIIYQQQgghhBBCCCGEEKIS/H9mK0bNVsxTZAAAAABJRU5ErkJgggs='))
 	[void]$combobox_delaytime.Items.Add('30 Minutes')
 	[void]$combobox_delaytime.Items.Add('1 Hour')
 	[void]$combobox_delaytime.Items.Add('2 Hours')
-	$combobox_delaytime.Location = New-Object System.Drawing.Point(12, 142)
+	$combobox_delaytime.Location = New-Object System.Drawing.Point(12, 157)
 	$combobox_delaytime.Name = 'combobox_delaytime'
-	$combobox_delaytime.Size = New-Object System.Drawing.Size(216, 28)
+	$combobox_delaytime.Size = New-Object System.Drawing.Size(246, 28)
 	$combobox_delaytime.TabIndex = 5
 	$combobox_delaytime.add_SelectedIndexChanged($combobox_delaytime_SelectedIndexChanged)
 	#
@@ -382,7 +383,7 @@ CCGEEEIIIYQQQgghhBBCCCGEEKIS/H9mK0bNVsxTZAAAAABJRU5ErkJgggs='))
 	$buttonDelayReboot.AutoSize = $True
 	$buttonDelayReboot.BackColor = [System.Drawing.Color]::WhiteSmoke 
 	$buttonDelayReboot.Cursor = 'Hand'
-	$buttonDelayReboot.Location = New-Object System.Drawing.Point(234, 127)
+	$buttonDelayReboot.Location = New-Object System.Drawing.Point(264, 142)
 	$buttonDelayReboot.Name = 'buttonDelayReboot'
 	$buttonDelayReboot.Size = New-Object System.Drawing.Size(120, 57)
 	$buttonDelayReboot.TabIndex = 4
@@ -395,7 +396,7 @@ CCGEEEIIIYQQQgghhBBCCCGEEKIS/H9mK0bNVsxTZAAAAABJRU5ErkJgggs='))
 	$button_RebootNow.AutoSize = $True
 	$button_RebootNow.BackColor = [System.Drawing.Color]::WhiteSmoke 
 	$button_RebootNow.Cursor = 'Hand'
-	$button_RebootNow.Location = New-Object System.Drawing.Point(360, 127)
+	$button_RebootNow.Location = New-Object System.Drawing.Point(390, 142)
 	$button_RebootNow.Name = 'button_RebootNow'
 	$button_RebootNow.Size = New-Object System.Drawing.Size(113, 57)
 	$button_RebootNow.TabIndex = 3
@@ -411,7 +412,7 @@ CCGEEEIIIYQQQgghhBBCCCGEEKIS/H9mK0bNVsxTZAAAAABJRU5ErkJgggs='))
 	$labelPromptMessage.ForeColor = [System.Drawing.Color]::Black 
 	$labelPromptMessage.Location = New-Object System.Drawing.Point(12, 9)
 	$labelPromptMessage.Name = 'labelPromptMessage'
-	$labelPromptMessage.Size = New-Object System.Drawing.Size(454, 115)
+	$labelPromptMessage.Size = New-Object System.Drawing.Size(491, 130)
 	$labelPromptMessage.TabIndex = 2
 	$labelPromptMessage.Text = "$PromptMessage"
 	$labelPromptMessage.TextAlign = 'MiddleCenter'
