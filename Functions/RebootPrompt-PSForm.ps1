@@ -20,7 +20,6 @@ param
 	    $PromptMessage = 'An important update has been applied to your computer. Please save an close any open work and press the "Reboot now" button to restart the computer. If now isn''t a good time select how long you would like to delay the reboot prompt and press the "Delay Reboot" button.'
 )
 
-
 	#----------------------------------------------
 	#region Import the Assemblies
 	#----------------------------------------------
@@ -155,8 +154,7 @@ param
 	$form_SystemUpdate.Controls.Add($buttonDelayReboot)
 	$form_SystemUpdate.Controls.Add($button_RebootNow)
 	$form_SystemUpdate.Controls.Add($labelPromptMessage)
-	$form_SystemUpdate.AutoScaleDimensions = New-Object System.Drawing.SizeF(144, 144)
-	$form_SystemUpdate.AutoScaleMode = 'Dpi'
+	$form_SystemUpdate.AutoScaleMode = 'Inherit'
 	$form_SystemUpdate.AutoSize = $True
 	$form_SystemUpdate.BackColor = [System.Drawing.Color]::FromArgb(255, 224, 224, 224)
 	$form_SystemUpdate.ClientSize = New-Object System.Drawing.Size(515, 206)
@@ -168,7 +166,7 @@ AAEAAAD/////AQAAAAAAAAAMAgAAAFFTeXN0ZW0uRHJhd2luZywgVmVyc2lvbj00LjAuMC4wLCBD
 dWx0dXJlPW5ldXRyYWwsIFB1YmxpY0tleVRva2VuPWIwM2Y1ZjdmMTFkNTBhM2EFAQAAABNTeXN0
 ZW0uRHJhd2luZy5JY29uAgAAAAhJY29uRGF0YQhJY29uU2l6ZQcEAhNTeXN0ZW0uRHJhd2luZy5T
 aXplAgAAAAIAAAAJAwAAAAX8////E1N5c3RlbS5EcmF3aW5nLlNpemUCAAAABXdpZHRoBmhlaWdo
-dAAACAgCAAAAAAAAAAAAAAAPAwAAAHknAAACAAABAAEAAAAAAAEAIABjJwAAFgAAAIlQTkcNChoK
+dAAACAgCAAAAAAEAAAABAAAPAwAAAHknAAACAAABAAEAAAAAAAEAIABjJwAAFgAAAIlQTkcNChoK
 AAAADUlIRFIAAAEAAAABAAgGAAAAXHKoZgAAJypJREFUeNrt3XmQHNWd4PFvZtZ9V/ahbnW3pNZ9
 ovtCt9B9IaGz1d0ChDgk1BJrT9jszoxjbM/MrgcveGNivZ6YDe8fMzGeWO94PGYM2GCby9jGYLAH
 G7ANBnMahBCidbW6KvePJ81wtFSvuyoz6/h9IhSOcLyiX2ZV/jLzvd/7PRBCCCGEEEIIIYQQQggh
