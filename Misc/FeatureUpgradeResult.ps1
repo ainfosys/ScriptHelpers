@@ -68,7 +68,9 @@
 		}
 	}
 	
-	$buttonOK_Click={
+	$buttonOK_Click = {
+		Disable-ScheduledTask -TaskName "Result-Prompt" -ErrorAction SilentlyContinue
+		Unregister-ScheduledTask -TaskName "Result-Prompt" -ErrorAction SilentlyContinue
 		$form_UpgradeResult.Close()
 	}
 	# --End User Generated Script--
@@ -219,7 +221,6 @@
 	return $form_UpgradeResult.ShowDialog()
 
 } #End Function
-
 
 [DateTime]$EndTime = Get-ItemProperty -Path $RegKey -Name "End" -ErrorAction SilentlyContinue | Select-Object -ExpandProperty "End"
 [DateTime]$LastReboot = Get-CimInstance -ClassName Win32_OperatingSystem | Select -expand LastBootUpTime
