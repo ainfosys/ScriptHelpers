@@ -221,7 +221,7 @@
 	return $form_UpgradeResult.ShowDialog()
 
 } #End Function
-
+$RegKey = "HKLM:\SOFTWARE\FeatureUpgrade"
 [DateTime]$EndTime = Get-ItemProperty -Path $RegKey -Name "End" -ErrorAction SilentlyContinue | Select-Object -ExpandProperty "End"
 [DateTime]$LastReboot = Get-CimInstance -ClassName Win32_OperatingSystem | Select -expand LastBootUpTime
 
