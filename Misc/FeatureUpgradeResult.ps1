@@ -15,7 +15,7 @@
 	$form_UpgradeResult = New-Object 'System.Windows.Forms.Form'
 	$Label_Error = New-Object 'System.Windows.Forms.Label'
 	$label_endcontent = New-Object 'System.Windows.Forms.Label'
-	$labelEndTimeIncludingRebo = New-Object 'System.Windows.Forms.Label'
+	$labelEndTime = New-Object 'System.Windows.Forms.Label'
 	$label_startcontent = New-Object 'System.Windows.Forms.Label'
 	$label_start = New-Object 'System.Windows.Forms.Label'
 	$label_resultcontent = New-Object 'System.Windows.Forms.Label'
@@ -69,8 +69,8 @@
 	}
 	
 	$buttonOK_Click = {
-		Disable-ScheduledTask -TaskName "Result-Prompt" -ErrorAction SilentlyContinue
-		Unregister-ScheduledTask -TaskName "Result-Prompt" -ErrorAction SilentlyContinue
+		#Disable-ScheduledTask -TaskName "Result-Prompt" -ErrorAction SilentlyContinue
+		#Unregister-ScheduledTask -TaskName "Result-Prompt" -ErrorAction SilentlyContinue
 		$form_UpgradeResult.Close()
 	}
 	# --End User Generated Script--
@@ -107,7 +107,7 @@
 	#
 	$form_UpgradeResult.Controls.Add($Label_Error)
 	$form_UpgradeResult.Controls.Add($label_endcontent)
-	$form_UpgradeResult.Controls.Add($labelEndTimeIncludingRebo)
+	$form_UpgradeResult.Controls.Add($labelEndTime)
 	$form_UpgradeResult.Controls.Add($label_startcontent)
 	$form_UpgradeResult.Controls.Add($label_start)
 	$form_UpgradeResult.Controls.Add($label_resultcontent)
@@ -116,16 +116,21 @@
 	$form_UpgradeResult.AutoScaleDimensions = New-Object System.Drawing.SizeF(8, 17)
 	$form_UpgradeResult.AutoScaleMode = 'Font'
 	$form_UpgradeResult.AutoSize = $True
-	$form_UpgradeResult.ClientSize = New-Object System.Drawing.Size(389, 263)
+	$form_UpgradeResult.ClientSize = New-Object System.Drawing.Size(352, 263)
+	$form_UpgradeResult.FormBorderStyle = 'Fixed3D'
+	$form_UpgradeResult.MaximizeBox = $False
+	$form_UpgradeResult.MinimizeBox = $False
 	$form_UpgradeResult.Name = 'form_UpgradeResult'
+	$form_UpgradeResult.ShowIcon = $False
+	$form_UpgradeResult.SizeGripStyle = 'Hide'
 	$form_UpgradeResult.StartPosition = 'CenterScreen'
-	$form_UpgradeResult.Text = 'Upgrade Result'
+	$form_UpgradeResult.Text = 'Upgrade Results'
 	$form_UpgradeResult.add_Load($form_UpgradeResult_Load)
 	#
 	# Label_Error
 	#
 	$Label_Error.Font = [System.Drawing.Font]::new('Microsoft Sans Serif', '10.2')
-	$Label_Error.Location = New-Object System.Drawing.Point(24, 75)
+	$Label_Error.Location = New-Object System.Drawing.Point(13, 75)
 	$Label_Error.Margin = '4, 0, 4, 0'
 	$Label_Error.Name = 'Label_Error'
 	$Label_Error.Size = New-Object System.Drawing.Size(327, 113)
@@ -137,22 +142,22 @@
 	# label_endcontent
 	#
 	$label_endcontent.AutoSize = $True
-	$label_endcontent.Location = New-Object System.Drawing.Point(309, 147)
+	$label_endcontent.Location = New-Object System.Drawing.Point(152, 149)
 	$label_endcontent.Margin = '4, 0, 4, 0'
 	$label_endcontent.Name = 'label_endcontent'
 	$label_endcontent.Size = New-Object System.Drawing.Size(30, 17)
 	$label_endcontent.TabIndex = 6
 	$label_endcontent.Text = 'null'
 	#
-	# labelEndTimeIncludingRebo
+	# labelEndTime
 	#
-	$labelEndTimeIncludingRebo.Font = [System.Drawing.Font]::new('Microsoft Sans Serif', '10.2')
-	$labelEndTimeIncludingRebo.Location = New-Object System.Drawing.Point(42, 145)
-	$labelEndTimeIncludingRebo.Margin = '4, 0, 4, 0'
-	$labelEndTimeIncludingRebo.Name = 'labelEndTimeIncludingRebo'
-	$labelEndTimeIncludingRebo.Size = New-Object System.Drawing.Size(259, 29)
-	$labelEndTimeIncludingRebo.TabIndex = 5
-	$labelEndTimeIncludingRebo.Text = 'End time (Including reboot time):'
+	$labelEndTime.Font = [System.Drawing.Font]::new('Microsoft Sans Serif', '10.2')
+	$labelEndTime.Location = New-Object System.Drawing.Point(42, 147)
+	$labelEndTime.Margin = '4, 0, 4, 0'
+	$labelEndTime.Name = 'labelEndTime'
+	$labelEndTime.Size = New-Object System.Drawing.Size(102, 27)
+	$labelEndTime.TabIndex = 5
+	$labelEndTime.Text = 'End time:'
 	#
 	# label_startcontent
 	#
@@ -178,7 +183,7 @@
 	#
 	$label_resultcontent.AutoSize = $True
 	$label_resultcontent.Font = [System.Drawing.Font]::new('Microsoft Sans Serif', '12')
-	$label_resultcontent.Location = New-Object System.Drawing.Point(277, 35)
+	$label_resultcontent.Location = New-Object System.Drawing.Point(263, 35)
 	$label_resultcontent.Margin = '4, 0, 4, 0'
 	$label_resultcontent.Name = 'label_resultcontent'
 	$label_resultcontent.Size = New-Object System.Drawing.Size(42, 25)
@@ -198,7 +203,7 @@
 	#
 	# buttonOK
 	#
-	$buttonOK.Location = New-Object System.Drawing.Point(226, 192)
+	$buttonOK.Location = New-Object System.Drawing.Point(190, 206)
 	$buttonOK.Margin = '4, 4, 4, 4'
 	$buttonOK.Name = 'buttonOK'
 	$buttonOK.Size = New-Object System.Drawing.Size(150, 58)
@@ -221,11 +226,151 @@
 	return $form_UpgradeResult.ShowDialog()
 
 } #End Function
+
+Function InstallOrUpdateModule {
+<#
+.DESCRIPTION: Updates NuGet and PowershellGet if out of date and installs the provided module name if a module name is provided
+.AUTHOR: Ryan
+.NOTES:
+    - This function was written to support the Powershell common parameter '-verbose'
+    - If a module name is not provided only NuGet and PowershellGet will update if they are out of date
+#>
+    [cmdletbinding()]
+    param
+    (
+	    [parameter(Mandatory = $false)]
+        [String]
+	    $ModuleName
+    )
+    # Variable used to check if the parameter was provided or not. $True means it contains something
+    $ParamCheck = [bool]$ModuleName
+
+    # Disable confirmation for installing modules and packages
+    # more or less this is not needed when used with -Force
+    Set-Variable -Name 'ConfirmPreference' -Value 'None' -Scope Script
+
+    if($ParamCheck){
+        Write-Verbose -Message "Provided module name is: $ModuleName"
+    }
+    else{
+        Write-Verbose -Message "No module name is provided so only nuget and powershellget will be updated"
+    }
+
+    # Set TLS to 1.2 for this Powershell session. This will not work on Windows 7 or lower.
+    Write-Verbose "Setting TLS protocol to 1.2 for this session. This may fail on older operating systems"
+    [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
+
+    # Determine if PackageManagement needs to be updated
+    try{
+       $LocalPackageMgmtVersion = Get-Package -Name PackageManagement -ErrorAction Stop | Select-Object -ExpandProperty Version
+       $LatestPackageMgmtVersion = Find-Package -Name PackageManagement | Select-Object -ExpandProperty Version
+
+       if($LocalPackageMgmtVersion -lt $LatestPackageMgmtVersion){
+            Write-Verbose -Message "PackageManagement Version is out of date, updating it now"
+            if($VerbosePreference -eq "Continue"){
+                Install-Package -Name PackageManagement -Force -ErrorAction Stop -Verbose
+            }
+            else{
+                Install-Package -Name PackageManagement -Force -ErrorAction Stop | Out-Null
+            }
+        }
+    }
+    Catch{
+        # Reaching this part most likely caused by PackageManagent not being installed
+        Write-Verbose -Message "PackageManagement not installed, installing it now"
+        if($VerbosePreference -eq "Continue"){
+             Install-Package -Name PackageManagement -Force -ErrorAction Stop -Verbose
+         }
+         else{
+             Install-Package -Name PackageManagement -Force -ErrorAction Stop | Out-Null
+         }
+        
+    }
+
+    try{
+        # Make sure package providers are up to date
+        Write-Verbose "Checking local versions of PackageManagement, Nuget and PowershellGet against latest available"
+        
+        $LocalNugetVersion = Get-PackageProvider -Name nuget | Select-Object -ExpandProperty Version
+        $LocalPowershellGetVersion = Get-PackageProvider -name PowershellGet | Select-Object -ExpandProperty Version
+        $LatestNugetVersion = Find-PackageProvider -Name nuget -ErrorAction Stop | Select-Object -ExpandProperty Version
+        $LatestPowershellGetVersion = Find-PackageProvider -name PowershellGet -ErrorAction Stop | Select-Object -ExpandProperty Version
+
+
+        if($LocalNugetVersion -lt $LatestNugetVersion){
+            
+            Write-Verbose -Message "NuGet version is out of date, updating it now"
+            if($VerbosePreference -eq "Continue"){
+                Install-PackageProvider -Name NuGet -Force -ErrorAction Stop -Verbose
+            }
+            else{
+                Install-PackageProvider -Name NuGet -Force -ErrorAction Stop | Out-Null
+            }
+        }
+    }
+    Catch{
+        Write-Output "Nuget or PackageManagement installation or check failed, consider rebooting and trying again or manually updating nuget/packagemanagement"
+    }
+
+    if($LocalPowershellGetVersion -lt $LatestPowershellGetVersion){
+        Write-Verbose -Message "Attempting to update PowershellGet now"
+        if($VerbosePreference -eq "Continue"){ 
+            Install-Module -Name PowerShellGet -Force -Verbose
+        }
+        else{
+            Install-Module -Name PowerShellGet -Force | Out-Null 
+        }
+    }
+
+    if($ParamCheck){
+            Write-Verbose -Message "Checking local system for desired module. Update if found out of date"
+            if ($(Get-Module -ListAvailable | Select-Object -ExpandProperty Name) -inotcontains $ModuleName)
+            {
+                Write-Verbose -Message "Module not found on local system, installing it now"
+                # if the module isn't found to be installed it will install it here
+                if($VerbosePreference -eq "Continue"){
+	                Install-Module -Name $ModuleName -Force -Verbose
+                }
+                else{
+                    Install-Module -Name $ModuleName -Force | Out-Null
+                }
+            }
+            elseif($(Get-Module -ListAvailable | Where-Object {$_.name -eq $ModuleName} | Select-Object -ExpandProperty Version) -lt $(Find-Module -name $ModuleName | Select-Object -ExpandProperty Version)){
+                Write-Verbose -Message "Module found on local system but out of date, updating it now"
+                if($VerbosePreference -eq "Continue"){
+                    # The local version is out of date, update it here
+                    Update-module -Name $ModuleName -Force -Verbose
+                }
+                else{
+                    Update-module -Name $ModuleName -Force | Out-Null
+                }
+            }
+            elseif($(Get-Module -ListAvailable | Where-Object {$_.name -eq $ModuleName} | Select-Object -ExpandProperty Version) -eq $(Find-Module -name $ModuleName | Select-Object -ExpandProperty Version)){
+                Write-Output "Module already installed and on latest version"
+                Write-Output "Local version: $(Get-Module -ListAvailable | Where-Object {$_.name -eq $ModuleName} | Select-Object -ExpandProperty Version)"
+                Write-Output "Online version: $(Find-Module -name $ModuleName | Select-Object -ExpandProperty Version)"
+            }
+            Write-Verbose -Message "Importing module now"
+            if($VerbosePreference -eq "Continue"){
+                Import-Module -name $ModuleName -Verbose
+            }
+            else{
+                Import-Module -Name $ModuleName | Out-Null
+            }
+    }
+}
+
 $RegKey = "HKLM:\SOFTWARE\FeatureUpgrade"
 [DateTime]$EndTime = Get-ItemProperty -Path $RegKey -Name "End" -ErrorAction SilentlyContinue | Select-Object -ExpandProperty "End"
 [DateTime]$LastReboot = Get-CimInstance -ClassName Win32_OperatingSystem | Select -expand LastBootUpTime
 
 if($LastReboot -lt $EndTime){
+
+    if($(Get-module -ListAvailable).name -inotcontains "RunAsUser"){
+        InstallOrUpdateModule -ModuleName "RunAsUser"
+    }
+    Invoke-AsCurrentUser -ScriptBlock {
     #Call the form
-    Show-Upgrade-Result_psf | Out-Null    
+    Show-Upgrade-Result_psf | Out-Null
+    } 
 }
