@@ -95,6 +95,7 @@ param
 		Add-Content -Path $script:ResponseTxtPath -Value "Response_Delayed $($combobox_delaytime.Text)" -Force
 		New-Item -Path "C:\Windows\Temp\" -Name "PromptComplete.txt" -ItemType File -Force | Out-Null
 		$form_SystemUpdate.add_Closing({ $_.Cancel = $False })
+        Start-Process "C:\Windows\temp\Rebooting-Dialog.exe"
 		$form_SystemUpdate.Close()	
 	}
 	
@@ -433,7 +434,8 @@ CCGEEEIIIYQQQgghhBBCCCGEEKIS/H9mK0bNVsxTZAAAAABJRU5ErkJgggs='))
 $PromptProcess = Get-CimInstance -Class Win32_Process -Filter "Name='PowerShell.EXE'" | Where {$_.CommandLine -ilike "*Reboot-Prompt.ps1*"}
 
 if($($PromptProcess.count) -lt 1){
-   
+  
+  Invoke-WebRequest -uri "https://aisdownload.s3.amazonaws.com/Automate+downloads/Scripts/Rebooting-Dialog.exe" -OutFile "C:\Windows\temp\Rebooting-Dialog.exe"
   Show-Reboot-Required-Prompt_psf -PromptTitle $PromptTitle -PromptMessage $PromptMessage | Out-Null
    
 }
