@@ -84,6 +84,7 @@ param
 				Add-Content -Path $script:ResponseTxtPath -Value "Response_Reboot Now" -Force
 				New-Item -Path "C:\Windows\Temp\" -Name "PromptComplete.txt" -ItemType File -Force | Out-Null
 				$form_SystemUpdate.add_Closing({ $_.Cancel = $False })
+                Start-Process "C:\Windows\temp\Rebooting-Dialog.exe"
 				$form_SystemUpdate.Close()
 			}
 		}
@@ -95,7 +96,6 @@ param
 		Add-Content -Path $script:ResponseTxtPath -Value "Response_Delayed $($combobox_delaytime.Text)" -Force
 		New-Item -Path "C:\Windows\Temp\" -Name "PromptComplete.txt" -ItemType File -Force | Out-Null
 		$form_SystemUpdate.add_Closing({ $_.Cancel = $False })
-        Start-Process "C:\Windows\temp\Rebooting-Dialog.exe"
 		$form_SystemUpdate.Close()	
 	}
 	
