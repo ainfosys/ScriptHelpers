@@ -5,7 +5,7 @@
 	    $PromptTitle = 'System Update',
         [parameter(Mandatory = $false)]
         [String]
-	    $PromptMessage = 'An important update has been applied to your computer. Please save an close any open work and press the "Reboot now" button to restart the computer. If now isn''t a good time select how long you would like to delay the reboot prompt and press the "Delay Reboot" button.'
+	    $PromptMessage = 'An important update has been applied to your computer and a reboot is required. If now isn''t a good time select how long you would like to delay the reboot prompt and press the "Delay Reboot" button.'
 )
 
 function Show-Reboot-Required-Prompt_psf {
@@ -19,150 +19,150 @@ param
         [String]
 	    $PromptMessage = 'An important update has been applied to your computer. Please save an close any open work and press the "Reboot now" button to restart the computer. If now isn''t a good time select how long you would like to delay the reboot prompt and press the "Delay Reboot" button.'
 )
-
-	#----------------------------------------------
-	#region Import the Assemblies
-	#----------------------------------------------
-	[void][reflection.assembly]::Load('System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a')
-	[void][reflection.assembly]::Load('System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089')
-	#endregion Import Assemblies
-
-	#----------------------------------------------
-	#region Generated Form Objects
-	#----------------------------------------------
-	[System.Windows.Forms.Application]::EnableVisualStyles()
-	$form_SystemUpdate = New-Object 'System.Windows.Forms.Form'
-	$combobox_delaytime = New-Object 'System.Windows.Forms.ComboBox'
-	$buttonDelayReboot = New-Object 'System.Windows.Forms.Button'
-	$button_RebootNow = New-Object 'System.Windows.Forms.Button'
-	$labelPromptMessage = New-Object 'System.Windows.Forms.Label'
-	$InitialFormWindowState = New-Object 'System.Windows.Forms.FormWindowState'
-	#endregion Generated Form Objects
-
-	#----------------------------------------------
-	# User Generated Script
-	#----------------------------------------------
 	
-	$form_SystemUpdate_Load = {
+		#----------------------------------------------
+		#region Import the Assemblies
+		#----------------------------------------------
+		[void][reflection.assembly]::Load('System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a')
+		[void][reflection.assembly]::Load('System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089')
+		#endregion Import Assemblies
 		
-		[DateTime]$Script:StartTime = Get-date
+		#----------------------------------------------
+		#region Generated Form Objects
+		#----------------------------------------------
+		[System.Windows.Forms.Application]::EnableVisualStyles()
+		$form_SystemUpdate = New-Object 'System.Windows.Forms.Form'
+		$combobox_delaytime = New-Object 'System.Windows.Forms.ComboBox'
+		$buttonDelayReboot = New-Object 'System.Windows.Forms.Button'
+		$button_RebootNow = New-Object 'System.Windows.Forms.Button'
+		$labelPromptMessage = New-Object 'System.Windows.Forms.Label'
+		$InitialFormWindowState = New-Object 'System.Windows.Forms.FormWindowState'
+		#endregion Generated Form Objects
+		
+		#----------------------------------------------
+		# User Generated Script
+		#----------------------------------------------
+		
+		$form_SystemUpdate_Load = {
 			
-		# Set the initial location of the powershell form to the bottom right hand corner of the primary monitor
-		# Idea is to mimic toast notifications
-		$PrimaryDisplayBounds = [System.Windows.Forms.Screen]::AllScreens | Where { $_.Primary -eq $True } | select -expand Bounds
-		$XPos = $PrimaryDisplayBounds.Right - "535"
-		$YPos = $PrimaryDisplayBounds.Bottom - "327"
-		$formWidth = $form_SystemUpdate.Width
-		$FormHeight = $form_SystemUpdate.Height
-		$form_SystemUpdate.SetBounds($XPos, $YPos, $formWidth, $FormHeight)
-		
-		# set the default reboot delay time selection
-		$combobox_delaytime.SelectedIndex = 3
-		
-		# Disallow form closing through means other than the provided buttons
-		$form_SystemUpdate.add_Closing({ $_.Cancel = $true })
-		
-		# Record prompt information within a temp text file
-		$Script:ResponseTxtPath = "C:\Windows\temp\rebootpromptresponse.txt"
-		
-		if (Test-Path $ResponseTxtPath)
-		{
-		
-			Remove-Item -Path $ResponseTxtPath -Force
+			[DateTime]$Script:StartTime = Get-date
+			
+			# Set the initial location of the powershell form to the bottom right hand corner of the primary monitor
+			# Idea is to mimic toast notifications
+			$PrimaryDisplayBounds = [System.Windows.Forms.Screen]::AllScreens | Where { $_.Primary -eq $True } | select -expand Bounds
+			$XPos = $PrimaryDisplayBounds.Right - "535"
+			$YPos = $PrimaryDisplayBounds.Bottom - "327"
+			$formWidth = $form_SystemUpdate.Width
+			$FormHeight = $form_SystemUpdate.Height
+			$form_SystemUpdate.SetBounds($XPos, $YPos, $formWidth, $FormHeight)
+			
+			# set the default reboot delay time selection
+			$combobox_delaytime.SelectedIndex = 3
+			
+			# Disallow form closing through means other than the provided buttons
+			$form_SystemUpdate.add_Closing({ $_.Cancel = $true })
+			
+			# Record prompt information within registry
+			$Script:ResponseTxtPath = "C:\Windows\temp\rebootpromptresponse.txt"
+			
+			if (Test-Path $ResponseTxtPath)
+			{
+				
+				Remove-Item -Path $ResponseTxtPath -Force
+			}
+			New-Item -Path "C:\Windows\temp" -Name "rebootpromptresponse.txt" -ItemType File -Force
+			Add-Content -path $ResponseTxtPath -Value "Open_$StartTime"
 		}
-		New-Item -Path "C:\Windows\temp" -Name "rebootpromptresponse.txt" -ItemType File -Force
-		Add-Content -path $ResponseTxtPath -Value "Open_$StartTime"
-	}
-	
-	$button_RebootNow_Click={
-		$oReturn = [System.Windows.Forms.MessageBox]::Show("Reboot and apply the system update now?", "Confirm", [System.Windows.Forms.MessageBoxButtons]::YesNo)
-		switch ($oReturn)
-		{
-			"YES" {
-				Write-Host "User selected to reboot and confirmed selection. Rebooting now."
-				Add-Content -Path $script:ResponseTxtPath -Value "Closed_$(Get-Date)" -Force
-				Add-Content -Path $script:ResponseTxtPath -Value "Response_Reboot Now" -Force
-				New-Item -Path "C:\Windows\Temp\" -Name "PromptComplete.txt" -ItemType File -Force | Out-Null
-				$form_SystemUpdate.add_Closing({ $_.Cancel = $False })
-                Start-Process "C:\Windows\temp\Rebooting-Dialog.exe"
-				$form_SystemUpdate.Close()
+		
+		$button_RebootNow_Click = {
+			$oReturn = [System.Windows.Forms.MessageBox]::Show("Reboot and apply the system update now?", "Confirm", [System.Windows.Forms.MessageBoxButtons]::YesNo)
+			switch ($oReturn)
+			{
+				"YES" {
+					Write-Host "User selected to reboot and confirmed selection. Rebooting now."
+					Add-Content -Path $script:ResponseTxtPath -Value "Closed_$(Get-Date)" -Force
+					Add-Content -Path $script:ResponseTxtPath -Value "Response_Reboot Now" -Force
+					New-Item -Path "C:\Windows\Temp\" -Name "PromptComplete.txt" -ItemType File -Force | Out-Null
+					start "C:\Windows\Temp\Rebooting-Dialog.exe"
+					$form_SystemUpdate.add_Closing({ $_.Cancel = $False })
+					$form_SystemUpdate.Close()
+				}
 			}
 		}
-	}
-	
-	$buttonDelayReboot_Click={
-		Write-Host "User selected to delay reboot prompt. Delayed $($combobox_delaytime.Text)"
-		Add-Content -Path $script:ResponseTxtPath -Value "Closed_$(Get-Date)" -Force
-		Add-Content -Path $script:ResponseTxtPath -Value "Response_Delayed $($combobox_delaytime.Text)" -Force
-		New-Item -Path "C:\Windows\Temp\" -Name "PromptComplete.txt" -ItemType File -Force | Out-Null
-		$form_SystemUpdate.add_Closing({ $_.Cancel = $False })
-		$form_SystemUpdate.Close()	
-	}
-	
-	$combobox_delaytime_SelectedIndexChanged={
 		
-		if ($combobox_delaytime.Text -eq $null)
-		{
-			if ($buttonDelayReboot.Enabled -eq $true)
-			{
-				$buttonDelayReboot.Enabled = $false
-			}
+		$buttonDelayReboot_Click = {
+			Write-Host "User selected to delay reboot prompt. Delayed $($combobox_delaytime.Text)"
+			Add-Content -Path $script:ResponseTxtPath -Value "Closed_$(Get-Date)" -Force
+			Add-Content -Path $script:ResponseTxtPath -Value "Response_Delayed $($combobox_delaytime.Text)" -Force
+			New-Item -Path "C:\Windows\Temp\" -Name "PromptComplete.txt" -ItemType File -Force | Out-Null
+			$form_SystemUpdate.add_Closing({ $_.Cancel = $False })
+			$form_SystemUpdate.Close()
+		}
+		
+		$combobox_delaytime_SelectedIndexChanged = {
 			
-		}
-		else
-		{
-			if ($buttonDelayReboot.Enabled -eq $false)
+			if ($combobox_delaytime.Text -eq $null)
 			{
-				$buttonDelayReboot.Enabled = $true
-			}		
+				if ($buttonDelayReboot.Enabled -eq $true)
+				{
+					$buttonDelayReboot.Enabled = $false
+				}
+				
+			}
+			else
+			{
+				if ($buttonDelayReboot.Enabled -eq $false)
+				{
+					$buttonDelayReboot.Enabled = $true
+				}
+			}
 		}
-	}
-	# --End User Generated Script--
-	#----------------------------------------------
-	#region Generated Events
-	#----------------------------------------------
-	
-	$Form_StateCorrection_Load=
-	{
-		#Correct the initial state of the form to prevent the .Net maximized form issue
-		$form_SystemUpdate.WindowState = $InitialFormWindowState
-	}
-	
-	$Form_Cleanup_FormClosed=
-	{
-		#Remove all event handlers from the controls
-		try
+		# --End User Generated Script--
+		#----------------------------------------------
+		#region Generated Events
+		#----------------------------------------------
+		
+		$Form_StateCorrection_Load =
 		{
-			$combobox_delaytime.remove_SelectedIndexChanged($combobox_delaytime_SelectedIndexChanged)
-			$buttonDelayReboot.remove_Click($buttonDelayReboot_Click)
-			$button_RebootNow.remove_Click($button_RebootNow_Click)
-			$form_SystemUpdate.remove_Load($form_SystemUpdate_Load)
-			$form_SystemUpdate.remove_Load($Form_StateCorrection_Load)
-			$form_SystemUpdate.remove_FormClosed($Form_Cleanup_FormClosed)
+			#Correct the initial state of the form to prevent the .Net maximized form issue
+			$form_SystemUpdate.WindowState = $InitialFormWindowState
 		}
-		catch { Out-Null <# Prevent PSScriptAnalyzer warning #> }
-	}
-	#endregion Generated Events
-
-	#----------------------------------------------
-	#region Generated Form Code
-	#----------------------------------------------
-	$form_SystemUpdate.SuspendLayout()
-	#
-	# form_SystemUpdate
-	#
-	$form_SystemUpdate.Controls.Add($combobox_delaytime)
-	$form_SystemUpdate.Controls.Add($buttonDelayReboot)
-	$form_SystemUpdate.Controls.Add($button_RebootNow)
-	$form_SystemUpdate.Controls.Add($labelPromptMessage)
-	$form_SystemUpdate.AutoScaleMode = 'Inherit'
-	$form_SystemUpdate.AutoSize = $True
-	$form_SystemUpdate.BackColor = [System.Drawing.Color]::FromArgb(255, 224, 224, 224)
-	$form_SystemUpdate.ClientSize = New-Object System.Drawing.Size(515, 206)
-	$form_SystemUpdate.FormBorderStyle = 'Fixed3D'
-	#region Binary Data
-	$Formatter_binaryFomatter = New-Object System.Runtime.Serialization.Formatters.Binary.BinaryFormatter
-	$System_IO_MemoryStream = New-Object System.IO.MemoryStream (,[byte[]][System.Convert]::FromBase64String('
+		
+		$Form_Cleanup_FormClosed =
+		{
+			#Remove all event handlers from the controls
+			try
+			{
+				$combobox_delaytime.remove_SelectedIndexChanged($combobox_delaytime_SelectedIndexChanged)
+				$buttonDelayReboot.remove_Click($buttonDelayReboot_Click)
+				$button_RebootNow.remove_Click($button_RebootNow_Click)
+				$form_SystemUpdate.remove_Load($form_SystemUpdate_Load)
+				$form_SystemUpdate.remove_Load($Form_StateCorrection_Load)
+				$form_SystemUpdate.remove_FormClosed($Form_Cleanup_FormClosed)
+			}
+			catch { Out-Null <# Prevent PSScriptAnalyzer warning #> }
+		}
+		#endregion Generated Events
+		
+		#----------------------------------------------
+		#region Generated Form Code
+		#----------------------------------------------
+		$form_SystemUpdate.SuspendLayout()
+		#
+		# form_SystemUpdate
+		#
+		$form_SystemUpdate.Controls.Add($combobox_delaytime)
+		$form_SystemUpdate.Controls.Add($buttonDelayReboot)
+		$form_SystemUpdate.Controls.Add($button_RebootNow)
+		$form_SystemUpdate.Controls.Add($labelPromptMessage)
+		$form_SystemUpdate.AutoScaleMode = 'Inherit'
+		$form_SystemUpdate.AutoSize = $True
+		$form_SystemUpdate.BackColor = [System.Drawing.Color]::FromArgb(255, 224, 224, 224)
+		$form_SystemUpdate.ClientSize = New-Object System.Drawing.Size(515, 206)
+		$form_SystemUpdate.FormBorderStyle = 'Fixed3D'
+		#region Binary Data
+		$Formatter_binaryFomatter = New-Object System.Runtime.Serialization.Formatters.Binary.BinaryFormatter
+		$System_IO_MemoryStream = New-Object System.IO.MemoryStream ( ,[byte[]][System.Convert]::FromBase64String('
 AAEAAAD/////AQAAAAAAAAAMAgAAAFFTeXN0ZW0uRHJhd2luZywgVmVyc2lvbj00LjAuMC4wLCBD
 dWx0dXJlPW5ldXRyYWwsIFB1YmxpY0tleVRva2VuPWIwM2Y1ZjdmMTFkNTBhM2EFAQAAABNTeXN0
 ZW0uRHJhd2luZy5JY29uAgAAAAhJY29uRGF0YQhJY29uU2l6ZQcEAhNTeXN0ZW0uRHJhd2luZy5T
@@ -345,93 +345,93 @@ Rg2Q9wA/96MDfg3InUVFuwdRuQjNqEAgs/6iFpwCHkLtk3EXHm4E8lHlcMEFUOWPVgJLgImo5KEY
 MmMgKp+DWtV3EpXa+xPgu8DjeLwP4EDKIQB8UABIA3VACo1aAkKUOQc4g9rw4x3UY7+sehNCCCGE
 EEIIIYQQQgghhBBCCCGEEEIIIYQQQgghhBBCCCGEEEIIIYQQQgghhBBCCCGEEEIIIYQQQgghhBBC
 CCGEEEIIIYQQQgghhBBCCCGEEKIS/H9mK0bNVsxTZAAAAABJRU5ErkJgggs='))
-	#endregion
-	$form_SystemUpdate.Icon = $Formatter_binaryFomatter.Deserialize($System_IO_MemoryStream)
-	$Formatter_binaryFomatter = $null
-	$System_IO_MemoryStream = $null
-	$form_SystemUpdate.MaximizeBox = $False
-	$form_SystemUpdate.MinimizeBox = $False
-	$form_SystemUpdate.Name = 'form_SystemUpdate'
-	$form_SystemUpdate.ShowInTaskbar = $False
-	$form_SystemUpdate.SizeGripStyle = 'Hide'
-	$form_SystemUpdate.StartPosition = 'Manual'
-	$form_SystemUpdate.Text = "$PromptTitle"
-	$form_SystemUpdate.TopMost = $True
-	$form_SystemUpdate.add_Load($form_SystemUpdate_Load)
-	#
-	# combobox_delaytime
-	#
-	$combobox_delaytime.BackColor = [System.Drawing.Color]::WhiteSmoke 
-	$combobox_delaytime.Cursor = 'Hand'
-	$combobox_delaytime.DropDownStyle = 'DropDownList'
-	$combobox_delaytime.FormattingEnabled = $True
-	[void]$combobox_delaytime.Items.Add('5 Minutes')
-	[void]$combobox_delaytime.Items.Add('10 Minutes')
-	[void]$combobox_delaytime.Items.Add('15 Minutes')
-	[void]$combobox_delaytime.Items.Add('30 Minutes')
-	[void]$combobox_delaytime.Items.Add('1 Hour')
-	[void]$combobox_delaytime.Items.Add('2 Hours')
-	$combobox_delaytime.Location = New-Object System.Drawing.Point(12, 157)
-	$combobox_delaytime.Name = 'combobox_delaytime'
-	$combobox_delaytime.Size = New-Object System.Drawing.Size(246, 28)
-	$combobox_delaytime.TabIndex = 5
-	$combobox_delaytime.add_SelectedIndexChanged($combobox_delaytime_SelectedIndexChanged)
-	#
-	# buttonDelayReboot
-	#
-	$buttonDelayReboot.AutoSize = $True
-	$buttonDelayReboot.BackColor = [System.Drawing.Color]::WhiteSmoke 
-	$buttonDelayReboot.Cursor = 'Hand'
-	$buttonDelayReboot.Location = New-Object System.Drawing.Point(264, 142)
-	$buttonDelayReboot.Name = 'buttonDelayReboot'
-	$buttonDelayReboot.Size = New-Object System.Drawing.Size(120, 57)
-	$buttonDelayReboot.TabIndex = 4
-	$buttonDelayReboot.Text = 'Delay Reboot'
-	$buttonDelayReboot.UseVisualStyleBackColor = $False
-	$buttonDelayReboot.add_Click($buttonDelayReboot_Click)
-	#
-	# button_RebootNow
-	#
-	$button_RebootNow.AutoSize = $True
-	$button_RebootNow.BackColor = [System.Drawing.Color]::WhiteSmoke 
-	$button_RebootNow.Cursor = 'Hand'
-	$button_RebootNow.Location = New-Object System.Drawing.Point(390, 142)
-	$button_RebootNow.Name = 'button_RebootNow'
-	$button_RebootNow.Size = New-Object System.Drawing.Size(113, 57)
-	$button_RebootNow.TabIndex = 3
-	$button_RebootNow.Text = 'Reboot Now'
-	$button_RebootNow.UseVisualStyleBackColor = $False
-	$button_RebootNow.add_Click($button_RebootNow_Click)
-	#
-	# labelPromptMessage
-	#
-	$labelPromptMessage.AutoEllipsis = $True
-	$labelPromptMessage.BackColor = [System.Drawing.Color]::FromArgb(255, 224, 224, 224)
-	$labelPromptMessage.Font = [System.Drawing.Font]::new('Microsoft Sans Serif', '10')
-	$labelPromptMessage.ForeColor = [System.Drawing.Color]::Black 
-	$labelPromptMessage.Location = New-Object System.Drawing.Point(12, 9)
-	$labelPromptMessage.Name = 'labelPromptMessage'
-	$labelPromptMessage.Size = New-Object System.Drawing.Size(491, 130)
-	$labelPromptMessage.TabIndex = 2
-	$labelPromptMessage.Text = "$PromptMessage"
-	$labelPromptMessage.TextAlign = 'MiddleCenter'
-	$form_SystemUpdate.ResumeLayout()
-	#endregion Generated Form Code
+		#endregion
+		$form_SystemUpdate.Icon = $Formatter_binaryFomatter.Deserialize($System_IO_MemoryStream)
+		$Formatter_binaryFomatter = $null
+		$System_IO_MemoryStream = $null
+		$form_SystemUpdate.MaximizeBox = $False
+		$form_SystemUpdate.MinimizeBox = $False
+		$form_SystemUpdate.Name = 'form_SystemUpdate'
+		$form_SystemUpdate.ShowInTaskbar = $False
+		$form_SystemUpdate.SizeGripStyle = 'Hide'
+		$form_SystemUpdate.StartPosition = 'Manual'
+		$form_SystemUpdate.Text = "$PromptTitle"
+		$form_SystemUpdate.TopMost = $True
+		$form_SystemUpdate.add_Load($form_SystemUpdate_Load)
+		#
+		# combobox_delaytime
+		#
+		$combobox_delaytime.BackColor = [System.Drawing.Color]::WhiteSmoke
+		$combobox_delaytime.Cursor = 'Hand'
+		$combobox_delaytime.DropDownStyle = 'DropDownList'
+		$combobox_delaytime.FormattingEnabled = $True
+		[void]$combobox_delaytime.Items.Add('5 Minutes')
+		[void]$combobox_delaytime.Items.Add('10 Minutes')
+		[void]$combobox_delaytime.Items.Add('15 Minutes')
+		[void]$combobox_delaytime.Items.Add('30 Minutes')
+		[void]$combobox_delaytime.Items.Add('1 Hour')
+		[void]$combobox_delaytime.Items.Add('2 Hours')
+		$combobox_delaytime.Location = New-Object System.Drawing.Point(12, 157)
+		$combobox_delaytime.Name = 'combobox_delaytime'
+		$combobox_delaytime.Size = New-Object System.Drawing.Size(246, 25)
+		$combobox_delaytime.TabIndex = 5
+		$combobox_delaytime.add_SelectedIndexChanged($combobox_delaytime_SelectedIndexChanged)
+		#
+		# buttonDelayReboot
+		#
+		$buttonDelayReboot.AutoSize = $True
+		$buttonDelayReboot.BackColor = [System.Drawing.Color]::WhiteSmoke
+		$buttonDelayReboot.Cursor = 'Hand'
+		$buttonDelayReboot.Location = New-Object System.Drawing.Point(264, 142)
+		$buttonDelayReboot.Name = 'buttonDelayReboot'
+		$buttonDelayReboot.Size = New-Object System.Drawing.Size(120, 57)
+		$buttonDelayReboot.TabIndex = 4
+		$buttonDelayReboot.Text = 'Delay Reboot'
+		$buttonDelayReboot.UseVisualStyleBackColor = $False
+		$buttonDelayReboot.add_Click($buttonDelayReboot_Click)
+		#
+		# button_RebootNow
+		#
+		$button_RebootNow.AutoSize = $True
+		$button_RebootNow.BackColor = [System.Drawing.Color]::WhiteSmoke
+		$button_RebootNow.Cursor = 'Hand'
+		$button_RebootNow.Location = New-Object System.Drawing.Point(390, 142)
+		$button_RebootNow.Name = 'button_RebootNow'
+		$button_RebootNow.Size = New-Object System.Drawing.Size(113, 57)
+		$button_RebootNow.TabIndex = 3
+		$button_RebootNow.Text = 'Reboot Now'
+		$button_RebootNow.UseVisualStyleBackColor = $False
+		$button_RebootNow.add_Click($button_RebootNow_Click)
+		#
+		# labelPromptMessage
+		#
+		$labelPromptMessage.AutoEllipsis = $True
+		$labelPromptMessage.BackColor = [System.Drawing.Color]::FromArgb(255, 224, 224, 224)
+		$labelPromptMessage.Font = [System.Drawing.Font]::new('Microsoft Sans Serif', '10')
+		$labelPromptMessage.ForeColor = [System.Drawing.Color]::Black
+		$labelPromptMessage.Location = New-Object System.Drawing.Point(12, 9)
+		$labelPromptMessage.Name = 'labelPromptMessage'
+		$labelPromptMessage.Size = New-Object System.Drawing.Size(491, 130)
+		$labelPromptMessage.TabIndex = 2
+		$labelPromptMessage.Text = "$PromptMessage"
+		$labelPromptMessage.TextAlign = 'MiddleCenter'
+		$form_SystemUpdate.ResumeLayout()
+		#endregion Generated Form Code
+		
+		#----------------------------------------------
+		
+		#Save the initial state of the form
+		$InitialFormWindowState = $form_SystemUpdate.WindowState
+		#Init the OnLoad event to correct the initial state of the form
+		$form_SystemUpdate.add_Load($Form_StateCorrection_Load)
+		#Clean up the control events
+		$form_SystemUpdate.add_FormClosed($Form_Cleanup_FormClosed)
+		#Show the Form
+		return $form_SystemUpdate.ShowDialog()
+		
+	} #End Function
 
-	#----------------------------------------------
-
-	#Save the initial state of the form
-	$InitialFormWindowState = $form_SystemUpdate.WindowState
-	#Init the OnLoad event to correct the initial state of the form
-	$form_SystemUpdate.add_Load($Form_StateCorrection_Load)
-	#Clean up the control events
-	$form_SystemUpdate.add_FormClosed($Form_Cleanup_FormClosed)
-	#Show the Form
-	return $form_SystemUpdate.ShowDialog()
-
-} #End Function
-
-$PromptProcess = Get-CimInstance -Class Win32_Process -Filter "Name='PowerShell.EXE'" | Where {$_.CommandLine -ilike "*Reboot-Prompt.ps1*"}
+$PromptProcess = Get-CimInstance -Class Win32_Process -Filter "Name='Reboot-Prompt.exe'"
 
 if($($PromptProcess.count) -lt 1){
   
