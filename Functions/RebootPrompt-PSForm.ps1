@@ -20,149 +20,217 @@ param
 	    $PromptMessage = 'An important update has been applied to your computer. Please save an close any open work and press the "Reboot now" button to restart the computer. If now isn''t a good time select how long you would like to delay the reboot prompt and press the "Delay Reboot" button.'
 )
 
-
-	#----------------------------------------------
-	#region Import the Assemblies
-	#----------------------------------------------
-	[void][reflection.assembly]::Load('System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a')
-	[void][reflection.assembly]::Load('System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089')
-	#endregion Import Assemblies
-
-	#----------------------------------------------
-	#region Generated Form Objects
-	#----------------------------------------------
-	[System.Windows.Forms.Application]::EnableVisualStyles()
-	$form_SystemUpdate = New-Object 'System.Windows.Forms.Form'
-	$combobox_delaytime = New-Object 'System.Windows.Forms.ComboBox'
-	$buttonDelayReboot = New-Object 'System.Windows.Forms.Button'
-	$button_RebootNow = New-Object 'System.Windows.Forms.Button'
-	$labelPromptMessage = New-Object 'System.Windows.Forms.Label'
-	$InitialFormWindowState = New-Object 'System.Windows.Forms.FormWindowState'
-	#endregion Generated Form Objects
-
-	#----------------------------------------------
-	# User Generated Script
-	#----------------------------------------------
-	
-	$form_SystemUpdate_Load = {
+		#----------------------------------------------
+		#region Import the Assemblies
+		#----------------------------------------------
+		[void][reflection.assembly]::Load('System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a')
+		[void][reflection.assembly]::Load('System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089')
+		#endregion Import Assemblies
 		
-		[DateTime]$Script:StartTime = Get-date
+		#----------------------------------------------
+		#region Generated Form Objects
+		#----------------------------------------------
+		[System.Windows.Forms.Application]::EnableVisualStyles()
+		$form_SystemUpdate = New-Object 'System.Windows.Forms.Form'
+		$picturebox1 = New-Object 'System.Windows.Forms.PictureBox'
+		$combobox_delaytime = New-Object 'System.Windows.Forms.ComboBox'
+		$buttonDelayReboot = New-Object 'System.Windows.Forms.Button'
+		$button_RebootNow = New-Object 'System.Windows.Forms.Button'
+		$labelPromptMessage = New-Object 'System.Windows.Forms.Label'
+		$InitialFormWindowState = New-Object 'System.Windows.Forms.FormWindowState'
+		#endregion Generated Form Objects
+		
+		#----------------------------------------------
+		# User Generated Script
+		#----------------------------------------------
+		
+		$form_SystemUpdate_Load = {
 			
-		# Set the initial location of the powershell form to the bottom right hand corner of the primary monitor
-		# Idea is to mimic toast notifications
-		$PrimaryDisplayBounds = [System.Windows.Forms.Screen]::AllScreens | Where { $_.Primary -eq $True } | select -expand Bounds
-		$XPos = $PrimaryDisplayBounds.Right - "535"
-		$YPos = $PrimaryDisplayBounds.Bottom - "327"
-		$formWidth = $form_SystemUpdate.Width
-		$FormHeight = $form_SystemUpdate.Height
-		$form_SystemUpdate.SetBounds($XPos, $YPos, $formWidth, $FormHeight)
-		
-		# set the default reboot delay time selection
-		$combobox_delaytime.SelectedIndex = 3
-		
-		# Disallow form closing through means other than the provided buttons
-		$form_SystemUpdate.add_Closing({ $_.Cancel = $true })
-		
-		# Record prompt information within registry
-		$Script:ResponseTxtPath = "C:\Windows\temp\rebootpromptresponse.txt"
-		
-		if (Test-Path $ResponseTxtPath)
+			[DateTime]$Script:StartTime = Get-date
+		<#
+		function Get-Divisors($n)
 		{
-		
-			Remove-Item -Path $ResponseTxtPath -Force
+			$div = @();
+			foreach ($i in 1 .. ($n/3))
+			{
+				$d = $n/$i;
+				if (($d -eq [System.Math]::Floor($d)) -and -not ($div -contains $i))
+				{
+					$div += $i;
+					$div += $d;
+				}
+			};
+			$div | Sort-Object;
 		}
-		New-Item -Path "C:\Windows\temp" -Name "rebootpromptresponse.txt" -ItemType File -Force
-		Add-Content -path $ResponseTxtPath -Value "Open_$StartTime"
-	}
-	
-	$button_RebootNow_Click={
-		$oReturn = [System.Windows.Forms.MessageBox]::Show("Reboot and apply the system update now?", "Confirm", [System.Windows.Forms.MessageBoxButtons]::YesNo)
-		switch ($oReturn)
+		
+		function Get-CommonDivisors($x, $y)
 		{
-			"YES" {
-				Write-Host "User selected to reboot and confirmed selection. Rebooting now."
-				Add-Content -Path $script:ResponseTxtPath -Value "Closed_$(Get-Date)" -Force
-				Add-Content -Path $script:ResponseTxtPath -Value "Response_Reboot Now" -Force
-				New-Item -Path "C:\Windows\Temp\" -Name "PromptComplete.txt" -ItemType File -Force | Out-Null
-				start "C:\Windows\Temp\Rebooting-Dialog.exe"
-				$form_SystemUpdate.add_Closing({ $_.Cancel = $False })
-				$form_SystemUpdate.Close()
+			$xd = Get-Divisors $x;
+			$yd = Get-Divisors $y;
+			$div = @();
+			foreach ($i in $xd) { if ($yd -contains $i) { $div += $i; } }
+			$div | Sort-Object;
+		}
+		
+		function Get-GreatestCommonDivisor($x, $y)
+		{
+			$d = Get-CommonDivisors $x $y;
+			$d[$d.Length - 1];
+		}
+		
+		function Get-Ratio($x, $y)
+		{
+			$d = Get-GreatestCommonDivisor $x $y;
+			New-Object PSObject -Property @{
+				X	    = $x;
+				Y	    = $y;
+				Divisor = $d;
+				XRatio  = $x/$d;
+				YRatio  = $y/$d;
+				Ratio   = "$($x/$d):$($y/$d)";
+			};
+		}
+		#>
+			$PrimaryDisplayBounds = [System.Windows.Forms.Screen]::AllScreens | where { $_.primary -eq $true } | select -expand Bounds
+			#$ScreenInfo = Get-Ratio -x $PrimaryDisplayBounds.Width -y $PrimaryDisplayBounds.Height
+			
+			# Set the initial location of the powershell form to the bottom right hand corner of the primary monitor
+			# Idea is to mimic toast notifications
+		<#
+		switch ($($ScreenInfo.Ratio)) {
+			"16:10" {
+				Write-Host "16:10"
+				$XPos = $PrimaryDisplayBounds.Right - "466"
+			}
+			"16:9" {
+				Write-Host "16:9"
+				$XPos = $PrimaryDisplayBounds.Right - "525"
+			}
+			"4:3" {
+				Write-Host "4:3"
+				$XPos = $PrimaryDisplayBounds.Right - "470"
+			}
+			default {
+				Write-Host "default"
+				$XPos = $PrimaryDisplayBounds.Right - "466"
 			}
 		}
-	}
-	
-	$buttonDelayReboot_Click={
-		Write-Host "User selected to delay reboot prompt. Delayed $($combobox_delaytime.Text)"
-		Add-Content -Path $script:ResponseTxtPath -Value "Closed_$(Get-Date)" -Force
-		Add-Content -Path $script:ResponseTxtPath -Value "Response_Delayed $($combobox_delaytime.Text)" -Force
-		New-Item -Path "C:\Windows\Temp\" -Name "PromptComplete.txt" -ItemType File -Force | Out-Null
-		$form_SystemUpdate.add_Closing({ $_.Cancel = $False })
-		$form_SystemUpdate.Close()	
-	}
-	
-	$combobox_delaytime_SelectedIndexChanged={
-		
-		if ($combobox_delaytime.Text -eq $null)
-		{
-			if ($buttonDelayReboot.Enabled -eq $true)
-			{
-				$buttonDelayReboot.Enabled = $false
-			}
+		#>
+			$XPos = $PrimaryDisplayBounds.Right - "525"
+			$YPos = $PrimaryDisplayBounds.Bottom - "290"
+			$formWidth = $form_SystemUpdate.Width
+			$FormHeight = $form_SystemUpdate.Height
+			$form_SystemUpdate.SetBounds($XPos, $YPos, $formWidth, $FormHeight)
 			
-		}
-		else
-		{
-			if ($buttonDelayReboot.Enabled -eq $false)
+			# set the default reboot delay time selection
+			$combobox_delaytime.SelectedIndex = 3
+			
+			# Disallow form closing through means other than the provided buttons
+			$form_SystemUpdate.add_Closing({ $_.Cancel = $true })
+			
+			# Record prompt information within registry
+			$Script:ResponseTxtPath = "C:\Windows\temp\rebootpromptresponse.txt"
+			
+			if (Test-Path $ResponseTxtPath)
 			{
-				$buttonDelayReboot.Enabled = $true
-			}		
+				
+				Remove-Item -Path $ResponseTxtPath -Force
+			}
+			New-Item -Path "C:\Windows\temp" -Name "rebootpromptresponse.txt" -ItemType File -Force
+			Add-Content -path $ResponseTxtPath -Value "Open_$StartTime"
 		}
-	}
-	# --End User Generated Script--
-	#----------------------------------------------
-	#region Generated Events
-	#----------------------------------------------
-	
-	$Form_StateCorrection_Load=
-	{
-		#Correct the initial state of the form to prevent the .Net maximized form issue
-		$form_SystemUpdate.WindowState = $InitialFormWindowState
-	}
-	
-	$Form_Cleanup_FormClosed=
-	{
-		#Remove all event handlers from the controls
-		try
+		
+		$button_RebootNow_Click = {
+			$oReturn = [System.Windows.Forms.MessageBox]::Show("Reboot and apply the system update now?", "Confirm", [System.Windows.Forms.MessageBoxButtons]::YesNo)
+			switch ($oReturn)
+			{
+				"YES" {
+					Write-Host "User selected to reboot and confirmed selection. Rebooting now."
+					Add-Content -Path $script:ResponseTxtPath -Value "Closed_$(Get-Date)" -Force
+					Add-Content -Path $script:ResponseTxtPath -Value "Response_Reboot Now" -Force
+					New-Item -Path "C:\Windows\Temp\" -Name "PromptComplete.txt" -ItemType File -Force | Out-Null
+					start "C:\Windows\Temp\Rebooting-Dialog.exe"
+					$form_SystemUpdate.add_Closing({ $_.Cancel = $False })
+					$form_SystemUpdate.Close()
+				}
+			}
+		}
+		
+		$buttonDelayReboot_Click = {
+			Write-Host "User selected to delay reboot prompt. Delayed $($combobox_delaytime.Text)"
+			Add-Content -Path $script:ResponseTxtPath -Value "Closed_$(Get-Date)" -Force
+			Add-Content -Path $script:ResponseTxtPath -Value "Response_Delayed $($combobox_delaytime.Text)" -Force
+			New-Item -Path "C:\Windows\Temp\" -Name "PromptComplete.txt" -ItemType File -Force | Out-Null
+			$form_SystemUpdate.add_Closing({ $_.Cancel = $False })
+			$form_SystemUpdate.Close()
+		}
+		
+		$combobox_delaytime_SelectedIndexChanged = {
+			
+			if ($combobox_delaytime.Text -eq $null)
+			{
+				if ($buttonDelayReboot.Enabled -eq $true)
+				{
+					$buttonDelayReboot.Enabled = $false
+				}
+				
+			}
+			else
+			{
+				if ($buttonDelayReboot.Enabled -eq $false)
+				{
+					$buttonDelayReboot.Enabled = $true
+				}
+			}
+		}
+		# --End User Generated Script--
+		#----------------------------------------------
+		#region Generated Events
+		#----------------------------------------------
+		
+		$Form_StateCorrection_Load =
 		{
-			$combobox_delaytime.remove_SelectedIndexChanged($combobox_delaytime_SelectedIndexChanged)
-			$buttonDelayReboot.remove_Click($buttonDelayReboot_Click)
-			$button_RebootNow.remove_Click($button_RebootNow_Click)
-			$form_SystemUpdate.remove_Load($form_SystemUpdate_Load)
-			$form_SystemUpdate.remove_Load($Form_StateCorrection_Load)
-			$form_SystemUpdate.remove_FormClosed($Form_Cleanup_FormClosed)
+			#Correct the initial state of the form to prevent the .Net maximized form issue
+			$form_SystemUpdate.WindowState = $InitialFormWindowState
 		}
-		catch { Out-Null <# Prevent PSScriptAnalyzer warning #> }
-	}
-	#endregion Generated Events
-
-	#----------------------------------------------
-	#region Generated Form Code
-	#----------------------------------------------
-	$form_SystemUpdate.SuspendLayout()
-	#
-	# form_SystemUpdate
-	#
-	$form_SystemUpdate.Controls.Add($combobox_delaytime)
-	$form_SystemUpdate.Controls.Add($buttonDelayReboot)
-	$form_SystemUpdate.Controls.Add($button_RebootNow)
-	$form_SystemUpdate.Controls.Add($labelPromptMessage)
-	$form_SystemUpdate.AutoScaleMode = 'Inherit'
-	$form_SystemUpdate.AutoSize = $True
-	$form_SystemUpdate.BackColor = [System.Drawing.Color]::FromArgb(255, 224, 224, 224)
-	$form_SystemUpdate.ClientSize = New-Object System.Drawing.Size(515, 206)
-	#region Binary Data
-	$Formatter_binaryFomatter = New-Object System.Runtime.Serialization.Formatters.Binary.BinaryFormatter
-	$System_IO_MemoryStream = New-Object System.IO.MemoryStream (,[byte[]][System.Convert]::FromBase64String('
+		
+		$Form_Cleanup_FormClosed =
+		{
+			#Remove all event handlers from the controls
+			try
+			{
+				$combobox_delaytime.remove_SelectedIndexChanged($combobox_delaytime_SelectedIndexChanged)
+				$buttonDelayReboot.remove_Click($buttonDelayReboot_Click)
+				$button_RebootNow.remove_Click($button_RebootNow_Click)
+				$form_SystemUpdate.remove_Load($form_SystemUpdate_Load)
+				$form_SystemUpdate.remove_Load($Form_StateCorrection_Load)
+				$form_SystemUpdate.remove_FormClosed($Form_Cleanup_FormClosed)
+			}
+			catch { Out-Null <# Prevent PSScriptAnalyzer warning #> }
+		}
+		#endregion Generated Events
+		
+		#----------------------------------------------
+		#region Generated Form Code
+		#----------------------------------------------
+		$form_SystemUpdate.SuspendLayout()
+		$picturebox1.BeginInit()
+		#
+		# form_SystemUpdate
+		#
+		$form_SystemUpdate.Controls.Add($picturebox1)
+		$form_SystemUpdate.Controls.Add($combobox_delaytime)
+		$form_SystemUpdate.Controls.Add($buttonDelayReboot)
+		$form_SystemUpdate.Controls.Add($button_RebootNow)
+		$form_SystemUpdate.Controls.Add($labelPromptMessage)
+		$form_SystemUpdate.AutoScaleDimensions = New-Object System.Drawing.SizeF(8, 17)
+		$form_SystemUpdate.AutoScaleMode = 'Font'
+		$form_SystemUpdate.AutoSize = $True
+		$form_SystemUpdate.BackColor = [System.Drawing.SystemColors]::ControlLight
+		$form_SystemUpdate.ClientSize = New-Object System.Drawing.Size(515, 206)
+		#region Binary Data
+		$Formatter_binaryFomatter = New-Object System.Runtime.Serialization.Formatters.Binary.BinaryFormatter
+		$System_IO_MemoryStream = New-Object System.IO.MemoryStream ( ,[byte[]][System.Convert]::FromBase64String('
 AAEAAAD/////AQAAAAAAAAAMAgAAAFFTeXN0ZW0uRHJhd2luZywgVmVyc2lvbj00LjAuMC4wLCBD
 dWx0dXJlPW5ldXRyYWwsIFB1YmxpY0tleVRva2VuPWIwM2Y1ZjdmMTFkNTBhM2EFAQAAABNTeXN0
 ZW0uRHJhd2luZy5JY29uAgAAAAhJY29uRGF0YQhJY29uU2l6ZQcEAhNTeXN0ZW0uRHJhd2luZy5T
@@ -836,95 +904,253 @@ AAAAAAAAB///4AAAAAAAAAAAB///8AAAAAAAAAAAD///+AAAAAAAAAAAH////AAAAAAAAAAAP///
 /gAAAAAAAAAAf////4AAAAAAAAAB/////8AAAAAAAAAD/////+AAAAAAAAAH//////gAAAAAAAAf
 //////wAAAAAAAA///////8AAAAAAAD////////AAAAAAAP////////wAAAAAA/////////8AAAA
 AD//////////gAAAAf//////////8AAAD/////8L'))
-	#endregion
-	$form_SystemUpdate.Icon = $Formatter_binaryFomatter.Deserialize($System_IO_MemoryStream)
-	$Formatter_binaryFomatter = $null
-	$System_IO_MemoryStream = $null
-	$form_SystemUpdate.MaximizeBox = $False
-	$form_SystemUpdate.MinimizeBox = $False
-	$form_SystemUpdate.Name = 'form_SystemUpdate'
-	$form_SystemUpdate.ShowInTaskbar = $False
-	$form_SystemUpdate.StartPosition = 'Manual'
-	$form_SystemUpdate.Text = "$PromptTitle"
-	$form_SystemUpdate.TopMost = $True
-	$form_SystemUpdate.add_Load($form_SystemUpdate_Load)
-	#
-	# combobox_delaytime
-	#
-	$combobox_delaytime.Anchor = 'Left, Right'
-	$combobox_delaytime.BackColor = [System.Drawing.Color]::WhiteSmoke 
-	$combobox_delaytime.Cursor = 'Hand'
-	$combobox_delaytime.DropDownStyle = 'DropDownList'
-	$combobox_delaytime.FormattingEnabled = $True
-	[void]$combobox_delaytime.Items.Add('5 Minutes')
-	[void]$combobox_delaytime.Items.Add('10 Minutes')
-	[void]$combobox_delaytime.Items.Add('15 Minutes')
-	[void]$combobox_delaytime.Items.Add('30 Minutes')
-	[void]$combobox_delaytime.Items.Add('1 Hour')
-	[void]$combobox_delaytime.Items.Add('2 Hours')
-	$combobox_delaytime.Location = New-Object System.Drawing.Point(12, 157)
-	$combobox_delaytime.Name = 'combobox_delaytime'
-	$combobox_delaytime.Size = New-Object System.Drawing.Size(246, 25)
-	$combobox_delaytime.TabIndex = 5
-	$combobox_delaytime.add_SelectedIndexChanged($combobox_delaytime_SelectedIndexChanged)
-	#
-	# buttonDelayReboot
-	#
-	$buttonDelayReboot.Anchor = 'Bottom, Right'
-	$buttonDelayReboot.AutoSize = $True
-	$buttonDelayReboot.BackColor = [System.Drawing.Color]::WhiteSmoke 
-	$buttonDelayReboot.Cursor = 'Hand'
-	$buttonDelayReboot.Location = New-Object System.Drawing.Point(264, 142)
-	$buttonDelayReboot.Name = 'buttonDelayReboot'
-	$buttonDelayReboot.Size = New-Object System.Drawing.Size(120, 57)
-	$buttonDelayReboot.TabIndex = 4
-	$buttonDelayReboot.Text = 'Delay Reboot'
-	$buttonDelayReboot.UseVisualStyleBackColor = $False
-	$buttonDelayReboot.add_Click($buttonDelayReboot_Click)
-	#
-	# button_RebootNow
-	#
-	$button_RebootNow.Anchor = 'Bottom, Right'
-	$button_RebootNow.AutoSize = $True
-	$button_RebootNow.BackColor = [System.Drawing.Color]::WhiteSmoke 
-	$button_RebootNow.Cursor = 'Hand'
-	$button_RebootNow.Location = New-Object System.Drawing.Point(390, 142)
-	$button_RebootNow.Name = 'button_RebootNow'
-	$button_RebootNow.Size = New-Object System.Drawing.Size(113, 57)
-	$button_RebootNow.TabIndex = 3
-	$button_RebootNow.Text = 'Reboot Now'
-	$button_RebootNow.UseVisualStyleBackColor = $False
-	$button_RebootNow.add_Click($button_RebootNow_Click)
-	#
-	# labelPromptMessage
-	#
-	$labelPromptMessage.Anchor = 'Top, Bottom, Left, Right'
-	$labelPromptMessage.AutoEllipsis = $True
-	$labelPromptMessage.BackColor = [System.Drawing.Color]::FromArgb(255, 224, 224, 224)
-	$labelPromptMessage.Font = [System.Drawing.Font]::new('Microsoft Sans Serif', '10')
-	$labelPromptMessage.ForeColor = [System.Drawing.Color]::Black 
-	$labelPromptMessage.Location = New-Object System.Drawing.Point(12, 9)
-	$labelPromptMessage.Name = 'labelPromptMessage'
-	$labelPromptMessage.Size = New-Object System.Drawing.Size(491, 130)
-	$labelPromptMessage.TabIndex = 2
-	$labelPromptMessage.Text = "$PromptMessage"
-	$labelPromptMessage.TextAlign = 'MiddleCenter'
-	$form_SystemUpdate.ResumeLayout()
-	#endregion Generated Form Code
+		#endregion
+		$form_SystemUpdate.Icon = $Formatter_binaryFomatter.Deserialize($System_IO_MemoryStream)
+		$Formatter_binaryFomatter = $null
+		$System_IO_MemoryStream = $null
+		$form_SystemUpdate.MaximizeBox = $False
+		$form_SystemUpdate.MinimizeBox = $False
+		$form_SystemUpdate.Name = 'form_SystemUpdate'
+		$form_SystemUpdate.Opacity = 0.95
+		$form_SystemUpdate.SizeGripStyle = 'Hide'
+		$form_SystemUpdate.StartPosition = 'Manual'
+		$form_SystemUpdate.Text = "$PromptTitle"
+		$form_SystemUpdate.TopMost = $True
+		$form_SystemUpdate.TransparencyKey = [System.Drawing.Color]::Transparent
+		$form_SystemUpdate.add_Load($form_SystemUpdate_Load)
+		#
+		# picturebox1
+		#
+		$picturebox1.BackgroundImageLayout = 'Center'
+		#region Binary Data
+		$Formatter_binaryFomatter = New-Object System.Runtime.Serialization.Formatters.Binary.BinaryFormatter
+		$System_IO_MemoryStream = New-Object System.IO.MemoryStream ( ,[byte[]][System.Convert]::FromBase64String('
+AAEAAAD/////AQAAAAAAAAAMAgAAAFFTeXN0ZW0uRHJhd2luZywgVmVyc2lvbj00LjAuMC4wLCBD
+dWx0dXJlPW5ldXRyYWwsIFB1YmxpY0tleVRva2VuPWIwM2Y1ZjdmMTFkNTBhM2EFAQAAABVTeXN0
+ZW0uRHJhd2luZy5CaXRtYXABAAAABERhdGEHAgIAAAAJAwAAAA8DAAAAERwAAAKJUE5HDQoaCgAA
+AA1JSERSAAAAYAAAAGAIBgAAAOKYdzgAAAABc1JHQgCuzhzpAAAABGdBTUEAALGPC/xhBQAAAAlw
+SFlzAAASdAAAEnQB3mYfeAAAG6ZJREFUeF7tnXmU1MW1xzsxJy8v+efl5STPsMg2gAMMm8Pqhogg
+O4JsoiCbgCBRiWIii6ggaqKCIyJKVFBEJAgoKigIyjoSWRRljWzCDPQ++wL33W/1rzrVNbenu2d6
+gGjqnM/pme7+Vd37vbX/lnZdSsnn84GfMP/DNGVuZaYyi5hNzH4mm8ljShlywN947wxzgMF3FzPT
+mP5MM+bXzE8Zp7T/JC04+G+mMXMnM5/ZypxiCpjzjBY6UXAs8kBe25iXmOFME+aXjCr/R5W008zP
+GdTyScxaJos5x0SI6Pf7K4WdH4My0Io+Zh5gmjP/xfywg6EdZH7DDGCWMxAiooZLIiYTsywGZaPb
+WsEMZn7L/LACoR1iqjH3MJlMEROX4IFAoFJIeZpoO5hiZidzL1OD+fcOhHaAQa2awOxhwgOnJAaQ
+RLQJBoMi0ndtpDKBtotBF/UVg0D8jvn3C4Rj9C8YzGIwoCrhJcclkUwkoRNBytNEsgm2OjZvZwYy
+mCRc+oHQRjKY0WDqiKlhGQclITSSiCY5OTnlIh1jIpWpse2E7Uw+s4RJYy7dIDjGodZjmneIUQ6Y
+DklOA0kojSSyRF5eHhUUFChyc3PD70t5mkj2mDZrP5gjzChGtYZLJsEYh+rMiwxqTIQTkpOSGMAU
+VQLi2kD8fV9/TW+9+SatWL6cjh8/rt6XjpfKBJKNpg/wicGa4hWmJqP8vqhJG8GkM1h9qimlabjp
+kOQ4kITS2GLb5Ofn0759+6hn167UoE5dali3Hk269z7yer3qcylPjWQLMG02fYFvDluYNszFC4JT
+OLYNejKqyzGNNZ0AtpOSIMAW2Aa13QRdzl+feppSatVW4iMI6c2a047t28PdkYlUJrDts+03fYOv
+DLqkWxho4KhygRIKZC5jhjFYwUYYaBpuOyY5D2yhNLbgJqj9J0+epF7dulP92nVUAAD+nvPss2IA
+NJINwLbX9MX0ET4zZxmMC9DCUaeKEwpyChzHIEUYZhpsOiI5KwkDJLE1EF1TVFREq1etosYNGobF
+B2gNg27tT2fOnFHf08dKZQHJNtN20yfTV/jOBJiJzM8YR6UqSiiA0eKj4KQJb4psY4pugrz+MH5C
+uPvRoBtqmdaUtmzeTIWFhWKekg22ncD0xfTRCkIOgyBUXUtAxgz6O3Q7SAmJLzkMJHGAJLgGXQtq
+/1d791L71m3Cg68JuqG/PPmUCoA+TipHsgmYtps+mb5aQUCFRHeU/DEBGTpgwI3o802DTENNB2zn
+JCGAKbIJBLdBAF6Y+7woPkCr6Ne7D2VnZanvm/lJZQPbTtMH0zfTZysIGBP6MkqvpCSdGYOp5kGm
+wuJLTpvCmNiCm0D8M9nZdGufW8p0PxoEpnnjJrRp40YqLi4WywCSTabNpi+mj6bvVhAwO2rLJCcI
+TkZYZG1k4hbfdEJyUhJDEhugGzEpKSmhdR+tpbTUVFF8DYIz67HH1TFmflLZko2mDwkGYTNzBVO5
+IDgZYHthHhMuxAyAaVA84kvOm+KY2MID1H589uCkSVFrvwbjQO/u3en06dPqWDt/yRbbXtOX8oJg
+agOtGKyYK75tgQMdcJowYnuhIuJLztqCAFtwDYQHqP0H9u+n69pfHTH3j0bT1Eb0yccfq+OQj1Sm
+ZJtpu+lTPEGAVgy2Le5ilI4JJX0Qg11Nsd83DShPfMk5SQRbcKBFNyktLaVXFiyIOvjaoJU8MnVa
+mbwlGyRbKxkEjAe4ICCxIDgHoOt5nSkjvhmARMSXnLaFAZLwGEhRi7HHM7j/gJjdjwatpFvnLvQ9
+r5iRh12WZJNtdzxBMLWxgoCt7Pi7InzRoR+Ty5QJgC2+GQBJfMlJWwggCQ8gHDh37hxt/PRTata4
+cdwtADRpeCV9uGaNaj3ITypbstH0wQ6C6bsdBCsA6L5xvlnpGjM5X8RpRIzkl4z4AP9P+dOfI2p/
+PIHA9//04OSIcuzygWSr6UslgrCDuZxxVI6S8AWH8UypLb4UAFt8MwCSQ5LjWhQbU3zU3iNHjlDH
+a68LD75pV6ZS5443lhHcBt+/6YaOdOzoUdWN6fwlWySb7QAAOwh2AIARBJxnvs/R1lFbSM4XcPXC
+LiacQSzxzQBoY6UASA6bgpuY4gN0P4teey1C1L69etHyZe9wl9QkQnCJRvUb0MoVK8LdkEayybbb
+9MkOAIgWBCMAACf61YkcMeEDB1zBcC6a+FIAtFFmAGwnJEdNIUxs8VFrA2zL0NuGhLsfdD3zMjLI
+7XbzXL9HzCkpjrv/D/cqW+zyJNts++0AgGgBAEIQcLLqfkdjR3UjOR/goilcCRA+0A6ALkwKgDbS
+DoDkoC2CxhYfoPZv3bxF7XBCeIh9Pa8DDh44QOfPn6cnZs6MOSvCMR2uuZYOHz4c0Q1pJBtNH0zf
+7ABIQRACAHDdkbrUJSLhDQdcyKoumooVAFt8MwCm4ZJjtvMaSXwAwR6dPj0sMl6n/vlh9T7Sls83
+U/MmTWIOyFfWS6G333qrTDekkWw1fbEDAGIFQAcBmjK4+GsIo/QOJ+cNXKu5jIkpvhQAbZwZAMkh
+yXEgCQ9Q+48fO6YGUdRiiHxV02a0fds2JT4+h80D+/WL2Qrw+fix45SNkg1AstkOAIgWAGAHQesJ
+O5mVjLoWNZzwD4PrXk4zMQOgC5UCoI2VAiA5DCThAWo4upilS5ao2qtFHDNylCoT4qM24zsZc+bG
+HAcQvGvatqX9334btRUA227Tp2gBAHEGANeitmQixAeYJpURv7wA2OKbAbCdkBwFkvAA4kMklDdy
+2J3h2o3TjzgNiYTPAdLuXbuodYuWMbsh8Pqrr6ngoRzJJmDbbwcA2EGwA6CC4OAHOUHygdycyT6f
+1+Wn8+EAYNvhAykAtvggWgC0kXYAJAeBLboG4uvan7kjU13lAGERhL69etPZs2fDtR/gb9gzfOjQ
+uLqhUcOHUy77ocuTbAOmD6ZvEQHg11xQECIH8PtKN7eHAidOk3//P8mX+RX51m0j79K15H3mzfXu
+9qN/5e44PhyARkxC3Y8WXwqAabjkGDAFN9Hi6xZgznAQhAXz56vAaPE1SK++sjBmC8Dnba9Kp717
+9qjjdLmSjSDsC/9dAEqKKb+4iPILCygPemS7KffQMQru+IqC731G/pdXku+xheQd/zR5BzxMnk73
+kKfVCHI3Gkzuuv3IXaM3uav1dDMtmHAA7mDUzRGJBsAW3wyA5BAwBTexxccGWtebOqu+HdzA08gj
+PI3UAUDNN8eBb/bto3atWsUVhJdenB/uhjTKPrxy+UXneIwALHZhMIcKTmZT3u4DlPvhVgouWEn+
+qS+Rb/jj5O16H3lajyDPlYPIXasPuX/fg9z/153cv+vGr4D/vpzfw/vVeprcZQbghUTELy8A4RoT
+JQCmwyam+ACC/n35ckpNqa9EQyvAtrIOjhbfDALsMceLaODzOwbfRn72sQRBOM+w2MWwP9tDBV8f
+obyPtlHO/BUUeDCDfAOnkPe6ceRpfBuLfEtITAisRI4qcCz+xvwE4uOGuLg23mzxywtAZcQHyHvs
+6NFKLNRYTD1xtRuSLb4GacH8l8TZUAOmPpNSty7Vq1OHrklvTfu3ZFLRrgOUt3wD5TzxOgVGziRf
+p4nkSbs9JDSE1TX5chY6cZHLI5P5DQKAG9ZOViQAidR+SXggiY/ar2Y1La9S4iMId40YqcqUhNcg
+7fziCxWs+jiOxQYIQIu69emmOqk0onZzmnVFG1pRqyOdbDWMvKncN9foZXQbSRc6GllMSwQA1zeW
+e8ox0QBURnyAADzz9F/CNTm0kfauElgSXsHHnOfPPexH/x69qF2t+jSgdho9VCudFta8hj6tcSPt
+r96Vsqr1IG+1XuRjPBXrOirP75nLexRysAcjAH9mzldU/FgBkIQHkvAAYmZnZ1Ovbt1UAFD7cfkJ
+Nt0QGFt01Hv8XeoJUNG2ryjnmSWUmT6YvqzWmU5U604edhhiK8FtIaqakNCRras6t7Z6t5K7xVDi
+aegMBODVZNZ+MwCS8EASHmAgRXr/vffC13tiBYxtaKRzPFgqwUExH3M8mwrXbKWcKTwj6XIveer3
+V321lx33SoJUJWhJGCf0mFGd30vpr6agnh6TyDt2NnlnvUq+xR+Qb/0O8u09QL7vTixBADYkMwCV
+ER8gD329p5p6XnsdHT12TAWgNK+Air/5J+Uv/pCCY58ib7vR5L6Cp356uocaJ4mTbCLE5teavcnD
+83xvh7vJO3QG+R95mfyL1lBg0z8owIuwYNYZtZ0eyM0hP8BqOOAnn9+/GQHYd6ECIAkPtPjoYvbu
+2UtteS6PmUo9DsK4QbdT7qYvKe/ZpRTg6aCnKc9QIAKchwi2OFWB6ka4PJTJXQjm/BDbz+uAAM+e
+cv6+gXL/8Q3l8qo3NxBUK2O1Is7nFTFrFmTBta5aZ2jOHEYAoq6AL6T4pTwPxyA697k5lF4rhW6v
+3ZSeq9mOdtbvyV3LgJDYEKGqB03Vbzu1G691+pKXuxF//4cpOHUB5b61jvK/2EcF32dTAWuC1XFo
+ZVyotiWgj9ZL6wctowTAjQAE7QAku/ZLwgMlPNd69PwlwTwq/Hw3be01nrb8/kb6ngdQzFbQn1el
+6BiYMV54nOknxhEsugKjZlHunLcp/5NMKjxykoqCubxC5lUyV5RCflVbE47/Wg+tjxQAHQQrAAUI
+QJkTMMkMgCR8CYTn+l7Kfxezc3l/e4/82Dfhmn4hBlA9M8LrcQ70jlo30/Fh0yn/ldVUsHUvFZ86
+SyWFRVSCFTIoZTvZF+2f9jcJATiPAJTZA0pWAMoIz7WnhGt8iT9IhRt2UnDSXPK2HhkSpgq7l1At
+D01Fs3kdsK/6zbSy5g00o1Yb6l8njVrVbUBPzpqlxFb2cQUx7db+2EFIQgDowgQAjnEtKvrue8pb
+uJr8tzxEHsyFIToGOEuwpOBsI5zl16PVu9HnNTrRi1dcTWNrt6SOdRtRk3r1KaVevRC8au54fQc6
+evSoWlOY4gNb/GQHoOq6IDiDz77cTzkzXiFv+7tC4lTVlBH5YvDkqam3zUjKGT2bDk7LoCGNW9NV
+XMsb8JoCgtfH2TWLVF5t//2d5WomJolvBkD7m4QAqC4ouYMwzwjUzmIuf28jz4Mn/JU8TYaExKmK
+aSPy5ZbkqdOPfB0nUM7kF6hg9edUcvQ0nefF2mleVXfp3EXVclt0kxRec0ycMEH5I4lfRQFQg3Dy
+pqHoZni2kL9uB/lHzCRPA54+VkXf7kxJPTxF9N14D+VOe5mK1n9Bpdne0BYFz6rO8SCvtyxmTH9E
+CSwJr8Fu6bW41OXgQXWMLX5lA6B1tQKgpqGVX4jhpEUOv78+Uy1OPClO/55M4ZEXupcavcl79RhV
+04vWZVLpWV9ojwii49URXYP06YZPqWmjxqLwNm8sWiQGIBm1XwiAWohVfCvCMSRvx9fkH/901dR4
+1HYG3ViAW1XBsvVUciKbzpWijpPCFt0G55D79OxJandVEF2DVnLXyJHKzwsUALUVkfhmnCN+3uHj
+FHh0YWh7wFnIiCImCvJBIHkw9XXiLuapN6h4zyE6V1AUtaZL6FU2/n7yidlxdUPtWrVWt7/iuGji
+JzEAajMuse3oAi7M66fgkrXk7Tg+JFZShefa3nAgBYbOoPzlG6gky6NWy0p4S+Dy0OIDpK1btlAL
+XNrIIkvia/A5zqohD1P88mp/JQKgtqPjOyGDjLmgnD0HyDfuSXLX7huq9ZKQCaIWSjwt9aQOouD9
+c6hwy14qyStQWxSlhpi2yNEwxdfH+bw+GtC3X8xWgM/vuI27O38g7gBUUPxCZhACEPuUZB5n6uP3
+3/yIPJjLq+5GFjMR9D7MN9VupjVNe5NnzWdUUsQLOK7xtogaW2wb6RiAz5575ll1qlISXoMWkN68
+BX2RybMqPs4WP4kBwOyzBQJQ/kl5Fj/43UnyTc4IXdeSjLk89nuYg7xCfaH2NdS1bpPQBVce7m7Y
+aT0PNwU0sUXXSN8FyAszpS9wvpjFjdUNIUh42gqOi7f2VyAAuGtGnZQH8mUpuTkU2L6XvH0fSk5f
+j1aD1sOzpSWpXahPSjN1/1aDlBS65+7xyjEtvkYSFCQivs4HPt0+eHBc3RC6K5wGRTeUSO1PIAAv
+M+qyFBB5YRYO4AP9KzeSB2edktHXIw8eN4K8Tjjy1vvUuUNHatigATXmADRq0JAWvvxKmW0AUzyJ
+eMXXIP/58+bF1Q01T0ujzZ9/rvKxxS8vAHGKj5s1RjLCpYkB/iK+9LdV5MaFSJXtcpyWg3O2ucvX
+U2luPr235n21MNLi44knu3ftVmLaomlscWMh5YHp657du6nNVekxuyG0gicen1lV3Q+ukMZjm62L
+c/Elr5e8GcvUCeVK71RyrcfVZMGZr1HhiSwqYmHgCO5YvDKlvgoAXnFRLYyESGjytnAaSWgJ6VgN
+xBmBq+didENoJb2691CPOUAQEqn9cQTgE+ZXTDgALhb/PkzVvPPeCV02UZn+Xtf6Xg9Q3qc7lei4
+5hICfPfdd9Tlxk5q9xEBwGvG3Lmq9kN8jS2cRhLcRDoG6HxRzqsLF8ZsASAttRGtW7tWHW+LX14A
+tPjlBGCy1j10j8AZt8uXl5vmXbjqtPvKgZWr+RC/9i3qmsoCrvXq9J3ThCEQ7mqEYxAfNG+SRhs+
+WV8mAMAWUWOLrpG+C8w88T1cxNu+Tdu4uiHcChVP7ZcCEEX8yBs0kLzvf+bi2v9zd8thyypV87Fn
+kzqYgvNXUEEwhwqxSeeID2Dc3WPHhrsf9P+4cQ47kBDGFEojCQpM4YH0HSDlCeHGjr4rrm4IrRX3
+F8P+eGp/HAFYyVi3KO077HLX6etytx/d331FnyJR3FhA/GZ3UA4PtKq2sMF41eJDjH/s3KkGXAiv
++3889wHPf5CE0tiiaioiPsAxby5+QxTdBraufPdddZwtvhQAW3wdAEd8+SY9JM+gKS7P0Bm/cTcc
+uF0UuDy0+Ks3qRsX8o0mq4OAgWz2rFnhvl8FgB186MEHw58DWyyNJHB5SHkAlIHPcYsrHnmj7iWw
+RDdBK7lv4h+UyEmo/fJtqkjeZR+7zrqauNxtRk5w1+x9ThRagrssbJ4F3/6Y8lhsbaQZADh9+NAh
+6mwMvgB/z5/3oqqROgDJCIJ0LDDLgI04AxarG8I4cW279urRyKgo8dT+KAEo/0ZtJM8tk9ESqvFK
+dZcotkTNPhR4bmnYKB0AMwhwGDMd3fVoMBi/t3q12nAzxQGSgEAS3EQ6Btj5I+jvLFumKoEkvAmC
+8MLzGREB0OJLAYhS+8t/VAGS940PuBXUdLnbjRrPraBUFNyEux7f2NmU6/ZSXv6/aoYZADh76OAh
+uvmmzhG1HxffXtWsudomtluARhISSMID6bsgWt7q4R/XXR9zZazXBHgoOPwyAxBNfCsA8T2sA0mN
+BcMf+607ddBmUXQN+v12oym450DoLkE2xg6ADsJTs2dHis+gNeDkB1amxbjiTBAJ2GJqKiM+QG2G
+fX+8//6Y3RCA/bi9FcfZ4sdR++N7XA2Sb+NOl/t/u7g8He7ux/P5XFF8UKMX+V9crm7JhAHaKDMI
+cHT7tu2qD7W7H/x/Nc/Fv+a+FUKZA7GNLaqmMuIDHLtq5SpliyS6CVoBHgqCa4fgXwLiJ/bAJiTP
+xL+6vE8v/oW7xdDX1Q0FtvjYYug8kYJHT6oTNWYAdBAQADy7ecyo0eF5vx0A3IKELWIIoUWJFghJ
+4PKQ8jDL0OUcO3ZMzfVjdUOaOc8+FxEAW3whAIk9sgwpQOTydBzv8vR9qDEPyAfLBADbDM+8GTpX
+wIVrY+wgzMt4IWLVa4PP3l2xokwATIFsJLFNpGOkvPUEAfxp8kNxdUMIElpzZmamqmBafDMAlvgV
+e2gfknfRGtcZfnV3uPtO7oryTfHdvNr1b90TuvbdMcAMApz66MMPIxZdEmgZD/7xARUsLYYkFpCE
+jSY4kPIAuhwN8kAliGc2BBCo0SNG0qlTp8ItIIr4FX9spU6ee59xeZ976xfu9OHz1J2ECAC6n5sm
+UuDEKXXOQAcAQHzUjM82bYrYcIsGgtOWB2I81xMDsSmMJB6QxDaRjjHzNYGt+Bxz/Hj2hjSoOI/P
+eFSdsEEQTPGNAFTuwa06qbXB8Mequ5sM2agC8Ltu5Ll9Ovk93nDkdZeDPv/tpUupU4cbYoqvwfdu
+7nQTfbBmDQU5L7M70TXcFlRT3mdAEh1AeA3yyDp9mrp1uTnucQCBgu3TpkxRd+7r1m+In5xHFyP5
+jpxwsfgIRLq74cCDKgBjnlAnbXTkd+7cSS8vWEAj77xTXfoRr/gafL9Vi5bqWT6LXnudPtu4ib78
+8kt1rzA26uCcFk8SWmOKbGOKrkHFwZbE4tcXUTqetBJnCwD6uz27dae/PPU0rf3oI3XugPVI7sO7
+kbxvr+MF2i9dnq739XTX7pvlGfaoOnGDAGAx06dHT9UspdlOvKA7wvF4bdm0GbVJb6W6pxuv70Ab
+1q9XrUEStjwk0YEec7799lv1UFeUmYj4Jmg1AA8OfGPx4rPcopL7+HqdvHOWuvKIfuK+Zswwz4CH
+fT5nDNi/f7/aUoYDOghRqWfCfanG+p7pIFrHqpUr1QkdiGeLbGILbQLRTfB9LAJxCUrdK2pRSq06
+aoCtKGmNGgfGjRkzilijpIuvk3fmq+iKLvNMzhjn++fxAM4fZ2Vl0fNz5qgTF49Mm2YwPcyM6SGm
+TZmqmG6AB3Dg6mXwqMUMPhY7qGhlsQSWsEW3ge0Zc59Xffn0qZF2AbwfwcMhphrg/ckPPJAzdMiQ
+iRnPP3/ZYzNmOGpVUfJ9ddDl3bLrMp/XG/4RHzUYG7MhPSgB9LMSphCSeAqjZsf8roOZr41kg3SM
++R3TF3PGpycgDLsenMg1/2fcTToqVXFi0UHSfsbKdNjGFidRpDyBZAew7TV9MX2Ez8yF/xkrnVAg
+c9F/yM1GOsZEKhPY9tn2m77BV+bi/ZCbTijY4aL9lGEspDw1ki3AtNn0Bb45XPyfMtRJG8FctB/z
+NJGOMZHKBJKNpg/wicH2Ai4pvDR+zNNMjkEX7edsoyHlqZFsAabN2g8GXc6l93O2ZoJhDuX+oDOQ
+HAeSUCaSyCbSMSZSmRrbRtjOoEVf+j/obCbHULSG//yk+cVK2mDmPz/qfzGTdoDBD0Pcw2Qy6u58
+IIlhIomYCFKeJtoOBhdN4bodCF+D+fcW3k7aIQa/UTCAWc5kM2rqqpFESiZmWQzKxrWaKxict0Vr
+/WEJbyftIIPH5eMa+UnMWgYranWTiIkkYiLY+TEoA4H/mHmAac6oazXBjypppxkMcpg54Vf75jMY
+uE8xmHdHtJAEwbHIA3ltY15iME3GjYm/ZH58opeXHEGwtMeNg2gdmEVNZTClxUp7P4Pai+lteEB3
+/sZ76E4OMPjuYmYag18FwYnxXzM/ZZzSLoXkcv0/eUDTlzQKRz8AAAAASUVORK5CYIIL'))
+		#endregion
+		$picturebox1.Image = $Formatter_binaryFomatter.Deserialize($System_IO_MemoryStream)
+		$Formatter_binaryFomatter = $null
+		$System_IO_MemoryStream = $null
+		$picturebox1.Location = New-Object System.Drawing.Point(12, 13)
+		$picturebox1.Margin = '4, 4, 4, 4'
+		$picturebox1.Name = 'picturebox1'
+		$picturebox1.Size = New-Object System.Drawing.Size(84, 83)
+		$picturebox1.SizeMode = 'StretchImage'
+		$picturebox1.TabIndex = 6
+		$picturebox1.TabStop = $False
+		#
+		# combobox_delaytime
+		#
+		$combobox_delaytime.Anchor = 'Left, Right'
+		$combobox_delaytime.BackColor = [System.Drawing.SystemColors]::Control
+		$combobox_delaytime.Cursor = 'Hand'
+		$combobox_delaytime.DropDownStyle = 'DropDownList'
+		$combobox_delaytime.FlatStyle = 'System'
+		$combobox_delaytime.ForeColor = [System.Drawing.Color]::Black
+		$combobox_delaytime.FormattingEnabled = $True
+		[void]$combobox_delaytime.Items.Add('5 Minutes')
+		[void]$combobox_delaytime.Items.Add('10 Minutes')
+		[void]$combobox_delaytime.Items.Add('15 Minutes')
+		[void]$combobox_delaytime.Items.Add('30 Minutes')
+		[void]$combobox_delaytime.Items.Add('1 Hour')
+		[void]$combobox_delaytime.Items.Add('2 Hours')
+		$combobox_delaytime.Location = New-Object System.Drawing.Point(12, 157)
+		$combobox_delaytime.Name = 'combobox_delaytime'
+		$combobox_delaytime.Size = New-Object System.Drawing.Size(260, 25)
+		$combobox_delaytime.TabIndex = 5
+		$combobox_delaytime.add_SelectedIndexChanged($combobox_delaytime_SelectedIndexChanged)
+		#
+		# buttonDelayReboot
+		#
+		$buttonDelayReboot.Anchor = 'Bottom, Right'
+		$buttonDelayReboot.AutoSize = $True
+		$buttonDelayReboot.BackColor = [System.Drawing.Color]::FromArgb(255, 60, 60, 61)
+		$buttonDelayReboot.Cursor = 'Hand'
+		$buttonDelayReboot.FlatStyle = 'System'
+		$buttonDelayReboot.ForeColor = [System.Drawing.Color]::White
+		$buttonDelayReboot.Location = New-Object System.Drawing.Point(290, 148)
+		$buttonDelayReboot.Name = 'buttonDelayReboot'
+		$buttonDelayReboot.Size = New-Object System.Drawing.Size(108, 42)
+		$buttonDelayReboot.TabIndex = 4
+		$buttonDelayReboot.Text = 'Delay Reboot'
+		$buttonDelayReboot.UseVisualStyleBackColor = $False
+		$buttonDelayReboot.add_Click($buttonDelayReboot_Click)
+		#
+		# button_RebootNow
+		#
+		$button_RebootNow.Anchor = 'Bottom, Right'
+		$button_RebootNow.AutoSize = $True
+		$button_RebootNow.BackColor = [System.Drawing.Color]::FromArgb(255, 60, 60, 61)
+		$button_RebootNow.Cursor = 'Hand'
+		$button_RebootNow.FlatStyle = 'System'
+		$button_RebootNow.ForeColor = [System.Drawing.Color]::White
+		$button_RebootNow.Location = New-Object System.Drawing.Point(404, 148)
+		$button_RebootNow.Name = 'button_RebootNow'
+		$button_RebootNow.Size = New-Object System.Drawing.Size(99, 42)
+		$button_RebootNow.TabIndex = 3
+		$button_RebootNow.Text = 'Reboot Now'
+		$button_RebootNow.UseVisualStyleBackColor = $False
+		$button_RebootNow.add_Click($button_RebootNow_Click)
+		#
+		# labelPromptMessage
+		#
+		$labelPromptMessage.Anchor = 'Top, Bottom, Left, Right'
+		$labelPromptMessage.AutoEllipsis = $True
+		$labelPromptMessage.BackColor = [System.Drawing.SystemColors]::ControlLight
+		$labelPromptMessage.FlatStyle = 'System'
+		$labelPromptMessage.Font = [System.Drawing.Font]::new('Calibri', '12')
+		$labelPromptMessage.ForeColor = [System.Drawing.Color]::Black
+		$labelPromptMessage.Location = New-Object System.Drawing.Point(103, 9)
+		$labelPromptMessage.Name = 'labelPromptMessage'
+		$labelPromptMessage.Size = New-Object System.Drawing.Size(400, 130)
+		$labelPromptMessage.TabIndex = 2
+		$labelPromptMessage.Text = "$PromptMessage"
+		$labelPromptMessage.TextAlign = 'MiddleCenter'
+		$picturebox1.EndInit()
+		$form_SystemUpdate.ResumeLayout()
+		#endregion Generated Form Code
+		
+		#----------------------------------------------
+		
+		#Save the initial state of the form
+		$InitialFormWindowState = $form_SystemUpdate.WindowState
+		#Init the OnLoad event to correct the initial state of the form
+		$form_SystemUpdate.add_Load($Form_StateCorrection_Load)
+		#Clean up the control events
+		$form_SystemUpdate.add_FormClosed($Form_Cleanup_FormClosed)
+		#Show the Form
+		return $form_SystemUpdate.ShowDialog()
+		
+	} #End Function
 
-	#----------------------------------------------
-
-	#Save the initial state of the form
-	$InitialFormWindowState = $form_SystemUpdate.WindowState
-	#Init the OnLoad event to correct the initial state of the form
-	$form_SystemUpdate.add_Load($Form_StateCorrection_Load)
-	#Clean up the control events
-	$form_SystemUpdate.add_FormClosed($Form_Cleanup_FormClosed)
-	#Show the Form
-	return $form_SystemUpdate.ShowDialog()
-
-} #End Function
-
+		
 $PromptProcess = Get-CimInstance -Class Win32_Process -Filter "Name='Reboot-Prompt.exe'"
 
 if($($PromptProcess.count) -lt 1){
