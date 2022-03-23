@@ -2,7 +2,7 @@
 {
 	param
 	(
-		[parameter(Mandatory = $true, ValueFromPipeline = $true)]
+		[parameter(Mandatory = $true)]
 		$Process
 	)
     

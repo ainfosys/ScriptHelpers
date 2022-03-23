@@ -38,3 +38,5 @@
     $Content = New-BTContent -Visual $Visual -Actions $action
     Submit-BTNotification -Content $Content -AppId $ToastAppSource -UniqueIdentifier 'Reboot-Toast'
 }
+
+Reboot-Toast

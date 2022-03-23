@@ -23,21 +23,42 @@
 		[parameter(Mandatory = $false)]
 		[String]$DisplayName,
 		[parameter(Mandatory = $false)]
-		[ValidateSet("Foreground", "High", "Normal", "Low")]
 		[String]$Priority = "Normal",
 		[parameter(Mandatory = $false)]
 		[String]$Description = "a BITS job created with Invoke-BITSJob",
 		[parameter(Mandatory = $false)]
-		[ValidateSet("Download", "Upload", "UploadReply")]
 		[String]$TransferType = "Download",
 		[parameter(Mandatory = $false)]
 		[String]$FileHash,
 		[parameter(Mandatory = $false)]
-		[ValidateSet("MD5", "MACTripleDES", "RIPEMD160", "SHA1", "SHA256", "SHA384", "SHA512")]
 		[String]$FileHashAlgorithm
 	)
 	
 	#region Parameter validation
+	$AcceptedPriorityValues = "Foreground", "High", "Normal", "Low"
+	$AcceptedTransferTypes = "Download", "Upload", "UploadReply"
+	$AcceptedAlgorithms = "MD5", "MACTripleDES", "RIPEMD160", "SHA1", "SHA256", "SHA384", "SHA512"
+	
+	Write-Verbose -Message "Validating the parameters provided"
+	
+	if ($AcceptedPriorityValues -inotcontains $Priority)
+	{
+		Write-Output -InputObject "The priority parameter has been set to an unaccepted value. Please use Foreground, High, Normal or Low where Foreground is the highest priority."; Throw
+	}
+	else
+	{
+		Write-Verbose -Message "Priority parameter is valid"
+	}
+	
+	if ($AcceptedTransferTypes -inotcontains $TransferType)
+	{
+		Write-Output -InputObject "The TransferType parameter has been set to an unaccepted value. Please use Download, Upload or UploadReply."; Throw
+	}
+	else
+	{
+		Write-Verbose -Message "TransferType parameter is valid"
+	}
+	
 	$boolCheck = [bool]$FileHash
 	if ($boolCheck)
 	{
