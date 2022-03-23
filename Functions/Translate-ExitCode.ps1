@@ -2,13 +2,15 @@
 {
 	param
 	(
-		[parameter(Mandatory = $true, ValueFromPipeline = $true)]
+		[parameter(Mandatory = $true,
+			 ValueFromPipeline = $true,
+			 HelpMessage= 'Process object created by using start-process with -passthru')]
 		$Process
 	)
     
     $Errorxmlpath = "C:\Windows\temp\exitcodes.xml"
     if(!(test-path $Errorxmlpath)){
-	    Invoke-WebRequest -uri "https://raw.githubusercontent.com/ainfosys/ScriptHelpers/main/Files/ms-error-codes.xml" -OutFile "C:\Windows\temp\test.xml"
+	    Invoke-WebRequest -uri "https://raw.githubusercontent.com/ainfosys/ScriptHelpers/main/Files/ms-error-codes.xml" -OutFile "C:\Windows\temp\exitcodes.xml"
     }
 
 	[xml]$ErrorXml = Get-Content $Errorxmlpath
