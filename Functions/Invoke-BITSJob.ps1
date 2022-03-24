@@ -5,34 +5,34 @@
 	              logic to wait for the transfer and take action on errors that occur.	              
 	.AUTHOR: Ryan McAvoy
 	.NOTES:
-	    - For any BITS troubleshooting, I highly recommend using the Bits Manager tool originally made by a Microsoft employee and later improved by 2Pint (https://2pintsoftware.com/download/bits-manager/)	      
+	    - For any BITS troubleshooting, I highly recommend using the Bits Manager tool originally made by a Microsoft employee and later improved by 2Pint (https://2pintsoftware.com/download/bits-manager/)      
 	.TODO: 
 		- Allow for all parameters that Start-BitsTransfer allows
-		- if transfertype is upload validate the source is local and the destination is remote
+		X if transfertype is upload validate the source is local and the destination is remote
 		- Allow for a specified amount of retries. Allow for option to use built in timeout limit and retry and retries on fails such as hash doesnt match
 		- Add other common parameters, currently only -verbose is supported
-		- Validate access to destination
+		X Validate access to destination
 	#>
 	[cmdletbinding()]
 	param
 	(
-		[parameter(Mandatory = $true)]
+		[parameter(Mandatory = $true, HelpMessage = "The source location of the file to be transfered. Can be a local path, network path, or URL")]
 		[String]$Source,
-		[parameter(Mandatory = $true)]
+		[parameter(Mandatory = $true, HelpMessage = "The desired destination of the transfer file. For uploads this must be remote path the computer has access to.")]
 		[String]$Destination,
-		[parameter(Mandatory = $false)]
+		[parameter(Mandatory = $false, HelpMessage = "Name for the BITS job that will be created")]
 		[String]$DisplayName,
-		[parameter(Mandatory = $false)]
+		[parameter(Mandatory = $false, HelpMessage = "The priority dictates the speed of the transfer")]
 		[ValidateSet("Foreground", "High", "Normal", "Low")]
 		[String]$Priority = "Normal",
-		[parameter(Mandatory = $false)]
+		[parameter(Mandatory = $false, HelpMessage = "The description of the BITS job that will be created")]
 		[String]$Description = "a BITS job created with Invoke-BITSJob",
 		[parameter(Mandatory = $false)]
 		[ValidateSet("Download", "Upload", "UploadReply")]
 		[String]$TransferType = "Download",
-		[parameter(Mandatory = $false)]
+		[parameter(Mandatory = $false, HelpMessage = "Expected hash of the file being transfered")]
 		[String]$FileHash,
-		[parameter(Mandatory = $false)]
+		[parameter(Mandatory = $false, HelpMessage = "Algorithm to be used when a file hash parameter is provided")]
 		[ValidateSet("MD5", "MACTripleDES", "RIPEMD160", "SHA1", "SHA256", "SHA384", "SHA512")]
 		[String]$FileHashAlgorithm
 	)
@@ -47,21 +47,28 @@
 		{
 			Write-Output -InputObject "A file hash was provided but not the algorithm used to get the file hash. Please provide both when providing a file hash."; Throw
 		}
-		else
-		{
-			if ($AcceptedAlgorithms -inotcontains $FileHashAlgorithm)
-			{
-				Write-Output -InputObject "Unaccepted file hash algorithm entered. Please use MD5, MACTripleDES, RIPEMD168, SHA1, SHA256, SHA384, or SHA512"
-			}
-			else
-			{
-				Write-Verbose -Message "FileHash and FileHashAlgorithm were provided and are valid. The trasfer file will be validated against the hash once the transfer completes."
-			}
-		}
 	}
 	else
 	{
 		Write-Verbose -Message "FileHash parameter is not provided so the transfered file will not be validated against a hash"
+	}
+	
+	if ($TransferType -ieq "Upload")
+	{
+		# validate that the destination parameter provided is a remote destination
+		# Unsure of best way to do this, currently just checking for leading double backslashes
+		if ($Destination -inotlike "\\*")
+		{
+			Write-Output -InputObject "TransferType set to Upload but Destination is not a remote path"
+		}
+		else
+		{
+			# test the destination is accessible
+			if (!(Test-Path $Destination))
+			{
+				Write-Output -InputObject "Failed to validate access to remote path. Make sure the path provided is accessible."	
+			}
+		}	
 	}
 	
 	#endregion
