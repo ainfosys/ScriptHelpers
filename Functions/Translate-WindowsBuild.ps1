@@ -8,12 +8,21 @@
 	param
 	(
 		[parameter(Mandatory = $false, HelpMessage = 'Use the following to get the build number: $([System.Environment]::OSVersion.Version.Build)')]
+		[ValidateSet("10240", "10586", "14393", "15063", "16299", "17134", "17763", "18362", "18363", "19041", "19042", "19043", "19044", "22000")]
 		[int]$Build,
 		[parameter(Mandatory = $false, HelpMessage = "The 'Friendly Name' for build numbers. EX: 20H2")]
+		[ValidateSet("1507", "1511", "1607", "1703", "1709", "1803", "1809", "1903", "1909", "2004", "20H2", "21H1", "21H2")]
 		[string]$Version,
-		[parameter(Mandatory = $false)]
-		[Switch]$Win10Only = $false
+		[parameter(Mandatory = $false, HelpMessage = "Display only Windows 10 info")]
+		[Switch]$Win10Only = $false,
+		[parameter(Mandatory = $false, HelpMessage = "Display only Windows 11 info")]
+		[Switch]$Win11Only = $false
 	)
+	
+	if ($Win10Only -and $Win11Only)
+	{
+		Write-Error -Message "Only one switch parameter can be used at one time, Win11Only or Win10Only."; Throw
+	}
 	
 	$WininfoXMLpath = "C:\Windows\Temp\WinInfo.xml"
 	Invoke-WebRequest -Uri "https://raw.githubusercontent.com/ainfosys/ScriptHelpers/main/Files/Windows10-11-VersionHistory.xml" -OutFile $WininfoXMLpath
@@ -66,6 +75,18 @@
 		if ([string]::IsNullOrWhiteSpace($($Info.build)))
 		{
 			Write-Output -InputObject "Only Windows 11 infomation found. Windows 11 information selected to be excluded so no information can be returned."; Break
+		}
+	}
+	
+	if ($Win11Only)
+	{
+		# Exclude windows 11 info from the return info
+		$Info = $Info | where { $_.Majorversion -eq "11" }
+		
+		# Note the following may fail on devices without the proper version of .net installed
+		if ([string]::IsNullOrWhiteSpace($($Info.build)))
+		{
+			Write-Output -InputObject "Only Windows 10 infomation found. Windows 10 information selected to be excluded so no information can be returned."; Break
 		}
 	}
 	
