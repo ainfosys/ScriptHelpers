@@ -8,12 +8,7 @@
 		$Process
 	)
     
-    $Errorxmlpath = "C:\Windows\temp\exitcodes.xml"
-    if(!(test-path $Errorxmlpath)){
-	    Invoke-WebRequest -uri "https://raw.githubusercontent.com/ainfosys/ScriptHelpers/main/Files/ms-error-codes.xml" -OutFile "C:\Windows\temp\exitcodes.xml"
-    }
-
-	[xml]$ErrorXml = Get-Content $Errorxmlpath
+	[xml]$ErrorXml = Invoke-WebRequest -uri "https://raw.githubusercontent.com/ainfosys/ScriptHelpers/main/Files/ms-error-codes.xml" | select -expand Content
 	$SpecifiedError = $ErrorXml.Root.row | where { $_.code -eq $($Process.exitcode) }
 	
 	# append to psobject, add property to indicate if the exit code means failure or not

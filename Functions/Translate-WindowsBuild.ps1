@@ -25,9 +25,7 @@
 	}
 	
 	$WininfoXMLpath = "C:\Windows\Temp\WinInfo.xml"
-	Invoke-WebRequest -Uri "https://raw.githubusercontent.com/ainfosys/ScriptHelpers/main/Files/Windows10-11-VersionHistory.xml" -OutFile $WininfoXMLpath
-	
-	[xml]$WinInfoXML = Get-Content $WininfoXMLpath
+	[xml]$WinInfoXML = Invoke-WebRequest -Uri "https://raw.githubusercontent.com/ainfosys/ScriptHelpers/main/Files/Windows10-11-VersionHistory.xml" | select -expand Content
 	
 	$boolCheck = [bool]$Build
 	if (!($boolCheck))
