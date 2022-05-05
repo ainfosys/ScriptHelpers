@@ -6,7 +6,7 @@
     )
 
     try{
-       Return [Convert]::ToBase64String([System.Text.Encoding]::Unicode.GetBytes($EncodedString))
+       Return [Convert]::ToBase64String([System.Text.Encoding]::Unicode.GetBytes($String))
     }Catch{
        $Error[0]
        $Error[0].Exception.GetType().FullName
