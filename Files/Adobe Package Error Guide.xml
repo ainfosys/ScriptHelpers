@@ -1,0 +1,42 @@
+<?xml version="1.0"?>
+<root>
+<row ExitCode="0" Description="Application installed successfully"></row>
+<row ExitCode="1" Description="Unable to parse command line"></row>
+<row ExitCode="2" Description="Unknown user interface mode specified"></row>
+<row ExitCode="3" Description="Unable to initialize ExtendScript"></row>
+<row ExitCode="4" Description="User interface workflow failed"></row>
+<row ExitCode="5" Description="Unable to initialize user interface workflow"></row>
+<row ExitCode="6" Description="Silent workflow completed with errors"></row>
+<row ExitCode="7" Description="Unable to complete the silent workflow"></row>
+<row ExitCode="8" Description="Exit and restart needed"></row>
+<row ExitCode="9" Description="Unsupported operating system version"></row>
+<row ExitCode="10" Description="Unsupported file system"></row>
+<row ExitCode="11" Description="Another instance running"></row>
+<row ExitCode="12" Description="CAPS database integrity error"></row>
+<row ExitCode="13" Description="Media optimization failed"></row>
+<row ExitCode="14" Description="Failed due to insufficient privileges"></row>
+<row ExitCode="15" Description="Media DB sync failed"></row>
+<row ExitCode="16" Description="Failed to load the deployment file"></row>
+<row ExitCode="17" Description="EULA acceptance failed"></row>
+<row ExitCode="18" Description="Bootstrapping for Adobe Application Manager failed. See bootstrapper errors below."></row>
+<row ExitCode="19" Description="Conflicting processes running"></row>
+<row ExitCode="20" Description="Install source path not specified or does not exist"></row>
+<row ExitCode="21" Description="Version of payload not supported by version of RIBS"></row>
+<row ExitCode="22" Description="Install directory check failed"></row>
+<row ExitCode="23" Description="System requirements check failed"></row>
+<row ExitCode="24" Description="Exit due to user-canceled workflow"></row>
+<row ExitCode="25" Description="Binary pathname exceeding operating system&apos;s MAX PATH limit"></row>
+<row ExitCode="26" Description="Media swap required in silent mode"></row>
+<row ExitCode="27" Description="Keyed files detected in target"></row>
+<row ExitCode="28" Description="Base product is not installed"></row>
+<row ExitCode="29" Description="Base product has been moved"></row>
+<row ExitCode="30" Description="Insufficient disk space to install the payload (completed with errors)"></row>
+<row ExitCode="31" Description="Insufficient disk space to install the payload (failed)"></row>
+<row ExitCode="32" Description="Patch is already applied"></row>
+<row ExitCode="33" Description="The product is not installed, cannot uninstall."></row>
+<row ExitCode="34" Description="Payload information not found in Media_db"></row>
+<row ExitCode="35" Description="Some of the installer files are missing or invalid"></row>
+<row ExitCode="36" Description="Another MSI installation is alreday in progress"></row>
+<row ExitCode="37" Description="Validation failed"></row>
+<row ExitCode="38" Description="Unknown error"></row>
+</root>
