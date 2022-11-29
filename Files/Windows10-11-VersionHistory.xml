@@ -15,5 +15,6 @@
 <BuildInfo Version="21H2" Build="19044" ReleaseDate="11/16/2021" GACEOL="6/13/2023" GACEnterpriseEOL="6/11/2024" LTSCEOL="1/12/2027" MajorVersion="10"></BuildInfo>
 <BuildInfo Version="21H2" Build="22000" ReleaseDate="10/4/2021" GACEOL="10/10/2023" GACEnterpriseEOL="10/8/2024" LTSCEOL="N/A" MajorVersion="11"></BuildInfo>
 <BuildInfo Version="22H2" Build="19045" ReleaseDate="10/18/2022" GACEOL="5/14/2024" GACEnterpriseEOL="5/13/2025" LTSCEOL="N/A" MajorVersion="10"></BuildInfo>
-<BuildInfo Version="21H2" Build="22621" ReleaseDate="9/20/2022" GACEOL="10/8/2024" GACEnterpriseEOL="10/14/2025" LTSCEOL="N/A" MajorVersion="11"></BuildInfo>
+<BuildInfo Version="22H2" Build="22621" ReleaseDate="9/20/2022" GACEOL="10/8/2024" GACEnterpriseEOL="10/14/2025" LTSCEOL="N/A" MajorVersion="11"></BuildInfo>
+<BuildInfo Version="22H2" Build="22622" ReleaseDate="9/20/2022" GACEOL="10/8/2024" GACEnterpriseEOL="10/14/2025" LTSCEOL="N/A" MajorVersion="11"></BuildInfo>
 </root>
