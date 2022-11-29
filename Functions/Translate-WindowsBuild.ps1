@@ -8,7 +8,7 @@
 	param
 	(
 		[parameter(Mandatory = $false, HelpMessage = 'Use the following to get the build number: $([System.Environment]::OSVersion.Version.Build)')]
-		[ValidateSet("10240", "10586", "14393", "15063", "16299", "17134", "17763", "18362", "18363", "19041", "19042", "19043", "19044", "22000", "22621")]
+		[ValidateSet("10240", "10586", "14393", "15063", "16299", "17134", "17763", "18362", "18363", "19041", "19042", "19043", "19044", "22000", "22621", "22622")]
 		[int]$Build,
 		[parameter(Mandatory = $false, HelpMessage = "The 'Friendly Name' for build numbers. EX: 20H2")]
 		[ValidateSet("1507", "1511", "1607", "1703", "1709", "1803", "1809", "1903", "1909", "2004", "20H2", "21H1", "21H2", "22H2")]
