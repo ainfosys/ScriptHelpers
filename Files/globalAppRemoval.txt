@@ -1,0 +1,9 @@
+Automate Control Center
+ConnectWise Automate Control Center
+ConnectWiseChat
+connectwisecontrol*
+ScreenConnect Client*
+Kaseya Agent*
+KaseyaLiveConnect
+TeamViewer Host
+TeamViewer QuickSupport
