@@ -1,9 +1,18 @@
+AnyDesk*
 Automate Control Center
 ConnectWise Automate Control Center
 ConnectWiseChat
 connectwisecontrol*
 ScreenConnect Client*
+SplashTop*
+Logmein*
+GoToAssist Unattended Customer*
+GoTo Resolve*
+GoToAssist Customer*
 Kaseya Agent*
 KaseyaLiveConnect
 TeamViewer Host
 TeamViewer QuickSupport
+*VNC SERVER*
+TightVNC*
+UltraVNC*
