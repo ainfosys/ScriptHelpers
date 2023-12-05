@@ -1,8 +1,11 @@
 AnyDesk*
 Automate Control Center
+Bittorrent
 ConnectWise Automate Control Center
 ConnectWiseChat
 connectwisecontrol*
+Deluge
+Free Download Manager
 ScreenConnect Client*
 SplashTop*
 Logmein*
@@ -13,6 +16,11 @@ Kaseya Agent*
 KaseyaLiveConnect
 TeamViewer Host
 TeamViewer QuickSupport
+Transmission
+qBittorrent*
+*TorrentRTFREEPlus*
 *VNC SERVER*
 TightVNC*
 UltraVNC*
+uTorrent
+Vuze
