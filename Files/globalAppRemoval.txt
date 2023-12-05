@@ -16,6 +16,7 @@ Kaseya Agent*
 KaseyaLiveConnect
 TeamViewer Host
 TeamViewer QuickSupport
+Tor Browser
 Transmission
 qBittorrent*
 *TorrentRTFREEPlus*
