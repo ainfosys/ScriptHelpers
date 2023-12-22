@@ -1,39 +1,19 @@
-*TorrentRTFREEPlus*
 *VNC SERVER*
 AnyDesk*
 Automate Control Center
-Bittorrent
 ConnectWise Automate Control Center
 ConnectWiseChat
 connectwisecontrol*
-Deluge
-Epic Games Launcher
-Facebook Games Arcade*
-Free Download Manager
-GOG GALAXY
 GoTo Resolve*
 GoToAssist Customer*
 GoToAssist Unattended Customer*
 Kaseya Agent*
 KaseyaLiveConnect
 Logmein*
-qBittorrent*
-Riot Client
-Rockstar Games Launcher
 ScreenConnect Client*
 SplashTop*
-Steam
 TeamViewer Host
 TeamViewer QuickSupport
 TightVNC*
-Tor Browser
-Transmission
-Ubisoft Connect
 UltraVNC*
-uTorrent
 VSA X
-Vuze
-WildTangent Games
-WildTangentGames.63435CFB65F55
-WildTangentGames*
-www.crazygames.com-*
