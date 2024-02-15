@@ -28,8 +28,7 @@
 	#endregion
 	
 	#region Determine open apps for users logged in
-	$boolCheck = [bool]$LoggedInUsers
-	if ($boolCheck)
+	if ([bool]$LoggedInUsers)
 	{
 		# there are users logged in so determine if there are apps open in their session
 		forEach ($User in $($LoggedInUsers | Where-Object { $_.State -eq "Active" } | Select-Object -ExpandProperty UserName))
@@ -40,11 +39,9 @@
 	#endregion
 	
 	#region Return information
-	$boolCheck = [bool]$LoggedInUsers
-	if ($boolCheck)
+	if ([bool]$LoggedInUsers)
 	{
-		$boolCheck = [bool]$ActiveUserApps
-		if ($boolCheck)
+		if ([bool]$ActiveUserApps)
 		{
 			$ReturnObject = @{
 				"Username" = $($LoggedInUsers | Where-Object { $_.State -eq "Active" } | Select-Object -ExpandProperty USERNAME)
