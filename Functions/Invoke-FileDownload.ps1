@@ -6,8 +6,13 @@ function Invoke-FileDownload {
         $destination
     )
 
-    # set tls policy to tls12 and tls13
-    [Net.ServicePointManager]::SecurityProtocol = 15360
+    try{
+        # set tls policy to tls12 and tls13
+        [Net.ServicePointManager]::SecurityProtocol = 15360
+    }
+    Catch{
+        [System.Net.ServicePointManager]::SecurityProtocol = [System.Net.SecurityProtocolType]::Tls12
+    }
 
     # validate the parent directory of the destination
     $parentpath = Split-path $destination -parent
