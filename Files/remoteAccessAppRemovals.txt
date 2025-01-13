@@ -1,0 +1,13 @@
+*VNC SERVER*
+AnyDesk*
+connectwisecontrol*
+GoTo Resolve*
+GoToAssist Customer*
+GoToAssist Unattended Customer*
+Logmein*
+ScreenConnect Client*
+SplashTop*
+TeamViewer Host
+TeamViewer QuickSupport
+TightVNC*
+UltraVNC*
