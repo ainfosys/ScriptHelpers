@@ -1,19 +1,21 @@
-*VNC SERVER*
-AnyDesk*
+Advanced Monitoring Agent Network Management
+Advanced Monitoring Agent Web Protection
+AteraAgent
 Automate Control Center
 ConnectWise Automate Control Center
 ConnectWiseChat
-connectwisecontrol*
-GoTo Resolve*
-GoToAssist Customer*
-GoToAssist Unattended Customer*
+Datto RMM
+Ecosystem Agent
+File Cache Service Agent
+ITSPlatform
 Kaseya Agent*
 KaseyaLiveConnect
-Logmein*
-ScreenConnect Client*
-SplashTop*
-TeamViewer Host
-TeamViewer QuickSupport
-TightVNC*
-UltraVNC*
+LabTech® Software Remote Agent
+MSP Core Agent
+Request Handler Agent
+Security Manager AV Defender
+Syncro
+Patch Management Service Controller
 VSA X
+Windows Agent
+Windows Software Probe
