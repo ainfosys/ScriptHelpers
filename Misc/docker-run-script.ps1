@@ -1,3 +1,14 @@
+try{
+    [Net.ServicePointManager]::SecurityProtocol = 15360
+}
+catch{
+  # Fall back to tls 1.2 if error thrown
+    [System.Net.ServicePointManager]::SecurityProtocol = [System.Net.SecurityProtocolType]::Tls12
+}
+
+# if the progress preference isnt set downloads will display a lot of crap output
+$ProgressPreference = SilentlyContinue
+
 # get latest vscodium
 new-item -path 'c:\vscodium' -itemtype directory -force;
 $latest = $(irm "https://api.github.com/repos/VSCodium/vscodium/releases")[0].assets | where { $_.name -ilike "vscodium-reh-web-win32*.tar.gz" } | select -expand browser_download_url;
