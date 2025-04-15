@@ -10,14 +10,15 @@ catch{
 new-item -path 'c:\vscodium' -itemtype directory -force | out-null
 $latest = $(irm "https://api.github.com/repos/VSCodium/vscodium/releases")[0].assets | where { $_.name -ilike "vscodium-reh-web-win32*.tar.gz" } | select -expand browser_download_url
 write-host "~Downloading latest version of VSCodium web server"
-curl -L $latest --output C:\vscodium\vscodium.tar.gz
+. "C:\Windows\System32\curl.exe" -L $latest --output C:\vscodium\vscodium.tar.gz
 
 # get latest powershell core
 $latestPwsh = $($(IRM "https://api.github.com/repos/PowerShell/PowerShell/releases/latest")[0].assets | where { $_.name -ilike "*x64.msi" }).browser_download_url
 Write-host "~Downloading latest Powershell core installer"
-curl -L $latestPwsh -outfile "$ENV:Temp\pwsh.msi"
+. "C:\Windows\System32\curl.exe" -L $latestPwsh -outfile "$ENV:Temp\pwsh.msi"
 Write-host "~Installing Powershell Core"
-start-process msiexec -argumentlist "/i `"$ENV:Temp\pwsh.msi`" /qn /norestart" -wait
+$process = start-process msiexec -argumentlist "/i `"$ENV:Temp\pwsh.msi`" /qn /norestart" -wait -passthru
+Write-host "~Powershell install exit code: $($Process.exitcode)"
 
 # extract vscodium
 Write-host "~Extracting VSCodium"
