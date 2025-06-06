@@ -14,5 +14,7 @@ catch{
 $MSIS = Get-MSIProducts
 $MSIObject = $MSIS | where {$_.name -ieq "ConnectWise Automate Control Center"}
 if([bool]$MSIObject){
-    Remove-MSIProduct -MSIObject $MSIObject
+    foreach($Object in $MSIObject){
+        Remove-MSIProduct -MSIObject $Object
+    }
 }
