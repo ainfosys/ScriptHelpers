@@ -14,5 +14,7 @@ catch{
 $MSIS = Get-MSIProducts
 $MSIObject = $MSIS | where {$_.name -ilike "RealVNC Server*"}
 if([bool]$MSIObject){
-    Remove-MSIProduct -MSIObject $MSIObject
+    foreach($Object in $MSIObject){
+        Remove-MSIProduct -MSIObject $Object
+    }
 }
