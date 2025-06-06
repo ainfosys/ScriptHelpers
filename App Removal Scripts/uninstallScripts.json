@@ -26,5 +26,21 @@
     "ScreenConnect Client*" : {
         "uninstallScript": "https://raw.githubusercontent.com/ainfosys/ScriptHelpers/refs/heads/main/App%20Removal%20Scripts/Screenconnect.ps1",
         "discoveryMethod": "MSI"
+    },
+    "RealVNC Server*": {
+        "uninstallScript": "https://raw.githubusercontent.com/ainfosys/ScriptHelpers/refs/heads/main/App%20Removal%20Scripts/RealVNCServer.ps1",
+        "discoveryMethod": "MSI"
+    },
+    "AnyDesk*": {
+        "uninstallScript": "https://raw.githubusercontent.com/ainfosys/ScriptHelpers/refs/heads/main/App%20Removal%20Scripts/Anydesk.ps1",
+        "discoveryMethod": "Registry"
+    },
+    "TeamViewer Host": {
+        "uninstallScript": "https://raw.githubusercontent.com/ainfosys/ScriptHelpers/refs/heads/main/App%20Removal%20Scripts/Teamviewer-Host.ps1",
+        "discoveryMethod": "Registry"
+    },
+    "LogMeIn*": {
+        "uninstallScript": "https://raw.githubusercontent.com/ainfosys/ScriptHelpers/refs/heads/main/App%20Removal%20Scripts/LogMeIn.ps1",
+        "discoveryMethod": "MSI"
     }
 }
