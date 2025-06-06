@@ -14,7 +14,9 @@ catch{
 $MSIS = Get-MSIProducts
 $MSIObject = $MSIS | where {$_.name -ieq "MSP Core Agent"}
 if([bool]$MSIObject){
-    Remove-MSIProduct -MSIObject $MSIObject
+    foreach($obj in $MSIObject){
+        Remove-MSIProduct -MSIObject $Object
+    }
 }
 
 $MSIObject = $MSIS | where {$_.name -ieq "Windows Agent"}
