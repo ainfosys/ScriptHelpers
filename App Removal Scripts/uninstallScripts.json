@@ -1,0 +1,30 @@
+{
+    "Advanced Monitoring Agent Network Management": {
+        "uninstallScript": "https://raw.githubusercontent.com/ainfosys/ScriptHelpers/refs/heads/main/App%20Removal%20Scripts/solarwinds.ps1",
+        "discoveryMethod": "Registry"
+    },
+    "MSP Core Agent": {
+        "uninstallScript": "https://raw.githubusercontent.com/ainfosys/ScriptHelpers/refs/heads/main/App%20Removal%20Scripts/solarwinds-modern.ps1",
+        "discoveryMethod": "MSI"
+    },
+    "Windows Agent": {
+        "uninstallScript": "https://raw.githubusercontent.com/ainfosys/ScriptHelpers/refs/heads/main/App%20Removal%20Scripts/solarwinds-modern.ps1",
+        "discoveryMethod": "MSI"
+    },
+    "Patch Management Service Controller": {
+        "uninstallScript": "https://raw.githubusercontent.com/ainfosys/ScriptHelpers/refs/heads/main/App%20Removal%20Scripts/Solarwinds-Patch%20Management%20Service%20Controller.ps1",
+        "discoveryMethod": "Registry"
+    },
+    "File Cache Service Agent": {
+        "uninstallScript": "https://raw.githubusercontent.com/ainfosys/ScriptHelpers/refs/heads/main/App%20Removal%20Scripts/Solarwinds-File%20Cache%20Service%20Agent.ps1",
+        "discoveryMethod": "Registry"
+    },
+    "ConnectWise Automate Control Center": {
+        "uninstallScript": "https://raw.githubusercontent.com/ainfosys/ScriptHelpers/refs/heads/main/App%20Removal%20Scripts/automate-control-center.ps1",
+        "discoveryMethod": "MSI"
+    },
+    "ScreenConnect Client*" : {
+        "uninstallScript": "https://raw.githubusercontent.com/ainfosys/ScriptHelpers/refs/heads/main/App%20Removal%20Scripts/Screenconnect.ps1",
+        "discoveryMethod": "MSI"
+    }
+}
