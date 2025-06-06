@@ -11,6 +11,7 @@ ITSPlatform
 Kaseya Agent*
 KaseyaLiveConnect
 LabTech® Software Remote Agent
+LabTech Software Remote Agent
 MSP Core Agent
 Request Handler Agent
 Security Manager AV Defender
