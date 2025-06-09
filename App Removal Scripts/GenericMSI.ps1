@@ -16,11 +16,8 @@ catch{
 
 $MSIS = Get-MSIProducts
 $MSIObject = $MSIS | where {$_.name -ilike $MSIName}
-return $MSIObject
-<#
 if([bool]$MSIObject){
     foreach($Object in $MSIObject){
         Remove-MSIProduct -MSIObject $Object
     }
 }
-#>
