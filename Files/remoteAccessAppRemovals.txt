@@ -17,6 +17,7 @@ Premium Remote Control*
 Pulseway Remote Control
 RealVNC*
 RemotePC*
+Remote Support Jump Client*
 Rustdesk
 ScreenConnect Client*
 SplashTop*
