@@ -1,5 +1,5 @@
 param(
-  $MSIName
+  $MSINames
 )
 try{
     $Command = Get-command Remove-MSIProduct -ErrorAction Stop
@@ -14,10 +14,12 @@ catch{
     (new-object Net.WebClient).DownloadString('https://raw.githubusercontent.com/ainfosys/ScriptHelpers/main/Functions/Get-MSIProducts.ps1') | iex
 }
 
-$MSIS = Get-MSIProducts
-$MSIObject = $MSIS | where {$_.name -ilike $MSIName}
-if([bool]$MSIObject){
-    foreach($Object in $MSIObject){
-        Remove-MSIProduct -MSIObject $Object
-    }
+foreach($Msi in $MSINames)
+  $MSIS = Get-MSIProducts
+  $MSIObject = $MSIS | where {$_.name -ilike $MSI}
+  if([bool]$MSIObject){
+      foreach($Object in $MSIObject){
+          Remove-MSIProduct -MSIObject $Object
+      }
+  }
 }
