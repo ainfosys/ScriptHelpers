@@ -97,5 +97,9 @@
     "Kaseya Agent*": {
         "uninstallScript": "https://raw.githubusercontent.com/ainfosys/ScriptHelpers/refs/heads/main/App%20Removal%20Scripts/Kaseya%20Agent.ps1",
         "discoveryMethod": "Registry"
+    },
+    "Syncro": {
+        "uninstallScript": "https://raw.githubusercontent.com/ainfosys/ScriptHelpers/refs/heads/main/App%20Removal%20Scripts/Syncro-agent.ps1",
+        "discoveryMethod": "Registry"
     }
 }
