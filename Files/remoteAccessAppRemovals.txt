@@ -1,13 +1,28 @@
 *VNC SERVER*
 AnyDesk*
+BeyondTrust*
 connectwisecontrol*
+DameWare Remote Support*
+DeskIn
+G2ARemoteUnattended*
 GoTo Resolve*
 GoToAssist Customer*
 GoToAssist Unattended Customer*
+JumpCloud Remote Assist
 Logmein*
+LogMeIn Resolve
+Parsec
+Premium Remote Agent*
+Premium Remote Control*
+Pulseway Remote Control
+RealVNC*
+RemotePC*
+Rustdesk
 ScreenConnect Client*
 SplashTop*
 TeamViewer Host
 TeamViewer QuickSupport
+TSBackground Remote Control
 TightVNC*
 UltraVNC*
+Webex Remote Access
