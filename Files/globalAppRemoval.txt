@@ -13,8 +13,10 @@ Kaseya Agent*
 KaseyaLiveConnect
 LabTech® Software Remote Agent
 LabTech Software Remote Agent
+MeshCentral
 MSP Core Agent
 Request Handler Agent
+Remote Support Jump Client*
 Security Manager AV Defender
 Syncro
 Patch Management Service Controller
