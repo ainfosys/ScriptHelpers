@@ -14,7 +14,7 @@ catch{
     (new-object Net.WebClient).DownloadString('https://raw.githubusercontent.com/ainfosys/ScriptHelpers/main/Functions/Get-MSIProducts.ps1') | iex
 }
 
-foreach($Msi in $MSINames)
+foreach($Msi in $MSINames){
   $MSIS = Get-MSIProducts
   $MSIObject = $MSIS | where {$_.name -ilike $MSI}
   if([bool]$MSIObject){
