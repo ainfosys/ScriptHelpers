@@ -7,7 +7,9 @@ catch{
 $Apps = Get-InstalledApps
 $App = $Apps | where {$_.DisplayName -ilike "Kaseya Agent*"}
 $UninstallExe = $App.UninstallString -replace " /.*" -replace "`""
-$Process = Start-process $UninstallExe -ArgumentList "/s /norestart" -wait -PassThru
+$UninstallArgs = $app.UninstallString -replace "`"" -replace ".*$(split-path $UninstallExe -Leaf) " -replace "/l.*"
+$uninstallArgs = "/s " + "$uninstallArgs"
+$Process = Start-process $UninstallExe -ArgumentList $uninstallArgs -wait -PassThru
 try{
     $Command = Get-Command Translate-ExitCode -ErrorAction Stop
     Translate-ExitCode -Process $Process -AutoOutput
