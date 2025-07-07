@@ -22,14 +22,12 @@
         "discoveryMethod": "Registry"
     },
     "ConnectWise Automate Control Center": {
-        "uninstallScript": "https://raw.githubusercontent.com/ainfosys/ScriptHelpers/refs/heads/main/App%20Removal%20Scripts/GenericMSI.ps1",
-        "discoveryMethod": "MSI",
-        "scriptArgs": ["ConnectWise Automate Control Center"]
+        "uninstallScript": "https://raw.githubusercontent.com/ainfosys/ScriptHelpers/refs/heads/main/App%20Removal%20Scripts/automate-control-center.ps1",
+        "discoveryMethod": "Registry"
     },
     "Automate Control Center": {
-        "uninstallScript": "https://raw.githubusercontent.com/ainfosys/ScriptHelpers/refs/heads/main/App%20Removal%20Scripts/GenericMSI.ps1",
-        "discoveryMethod": "MSI",
-        "scriptArgs": ["Automate Control Center"]
+        "uninstallScript": "https://raw.githubusercontent.com/ainfosys/ScriptHelpers/refs/heads/main/App%20Removal%20Scripts/automate-control-center.ps1",
+        "discoveryMethod": "Registry"
     },
     "ScreenConnect Client*" : {
         "uninstallScript": "https://raw.githubusercontent.com/ainfosys/ScriptHelpers/refs/heads/main/App%20Removal%20Scripts/Screenconnect.ps1",
