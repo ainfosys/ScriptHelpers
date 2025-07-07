@@ -1,20 +1,18 @@
 try{
-    $Command = Get-command Remove-MSIProduct -ErrorAction Stop
+    $Command = get-command Get-InstalledApps -ErrorAction Stop
 }
 catch{
-    (new-object Net.WebClient).DownloadString('https://raw.githubusercontent.com/ainfosys/ScriptHelpers/refs/heads/main/Functions/Remove-MSIProduct.ps1') | iex
+    (new-object Net.WebClient).DownloadString('https://raw.githubusercontent.com/ainfosys/ScriptHelpers/main/Functions/Get-InstalledApps.ps1') | iex
 }
+$Apps = Get-InstalledApps
+$App = $Apps | where {$_.DisplayName -ilike "*Automate Control Center*"}
+$UninstallExe = $App.UninstallString -replace " /.*" -replace "`""
+$UninstallArgs = $app.UninstallString -replace "`"" -replace ".*$(split-path $UninstallExe -Leaf) " -replace "/l.*"
+$uninstallArgs = "/s " + "$uninstallArgs"
+$Process = Start-process $UninstallExe -ArgumentList $uninstallArgs -wait -PassThru
 try{
-    $Command = Get-command Get-MSIProducts -ErrorAction Stop
-}
-catch{
-    (new-object Net.WebClient).DownloadString('https://raw.githubusercontent.com/ainfosys/ScriptHelpers/main/Functions/Get-MSIProducts.ps1') | iex
-}
-
-$MSIS = Get-MSIProducts
-$MSIObject = $MSIS | where {$_.name -ieq "ConnectWise Automate Control Center"}
-if([bool]$MSIObject){
-    foreach($Object in $MSIObject){
-        Remove-MSIProduct -MSIObject $Object
-    }
+    $Command = Get-Command Translate-ExitCode -ErrorAction Stop
+    Translate-ExitCode -Process $Process -AutoOutput
+}catch{
+    Write-Output "Uninstall process exited with code: $($Process.ExitCode)"
 }
