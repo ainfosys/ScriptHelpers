@@ -99,5 +99,23 @@
     "Syncro": {
         "uninstallScript": "https://raw.githubusercontent.com/ainfosys/ScriptHelpers/refs/heads/main/App%20Removal%20Scripts/Syncro-agent.ps1",
         "discoveryMethod": "Registry"
+    },
+    "*VNC Server*": {
+        "uninstallScript": "https://raw.githubusercontent.com/ainfosys/ScriptHelpers/refs/heads/main/App%20Removal%20Scripts/GenericMSI.ps1",
+        "discoveryMethod": "MSI",
+        "scriptArgs": ["*VNC Server*"]
+    },
+    "BeyondTrust Remote Desktop*": {
+        "uninstallScript": "https://raw.githubusercontent.com/ainfosys/ScriptHelpers/refs/heads/main/App%20Removal%20Scripts/GenericMSI.ps1",
+        "discoveryMethod": "MSI",
+        "scriptArgs": ["BeyondTrust Remote Desktop*"]
+    },
+    "connectwisecontrol*" : {
+        "uninstallScript": "https://raw.githubusercontent.com/ainfosys/ScriptHelpers/refs/heads/main/App%20Removal%20Scripts/Screenconnect.ps1",
+        "discoveryMethod": "MSI"
+    },
+    "G2ARemoteUnattended*": {
+        "uninstallScript": "https://raw.githubusercontent.com/ainfosys/ScriptHelpers/refs/heads/main/App%20Removal%20Scripts/g2aUninstall.ps1",
+        "discoveryMethod": "Registry"
     }
 }
