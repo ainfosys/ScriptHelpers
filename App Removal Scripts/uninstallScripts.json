@@ -117,5 +117,14 @@
     "G2ARemoteUnattended*": {
         "uninstallScript": "https://raw.githubusercontent.com/ainfosys/ScriptHelpers/refs/heads/main/App%20Removal%20Scripts/g2aUninstall.ps1",
         "discoveryMethod": "Registry"
+    },
+    "Parsec": {
+        "uninstallScript": "https://raw.githubusercontent.com/ainfosys/ScriptHelpers/refs/heads/main/App%20Removal%20Scripts/parsec.ps1",
+        "discoveryMethod": "Registry"
+    },
+    "Barracuda RMM Support Assistant" : {
+        "uninstallScript": "https://raw.githubusercontent.com/ainfosys/ScriptHelpers/refs/heads/main/App%20Removal%20Scripts/GenericMSI.ps1",
+        "discoveryMethod": "MSI",
+        "scriptArgs": ["Barracuda RMM Support Assistant"]
     }
 }
