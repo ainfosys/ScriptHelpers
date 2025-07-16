@@ -126,5 +126,10 @@
         "uninstallScript": "https://raw.githubusercontent.com/ainfosys/ScriptHelpers/refs/heads/main/App%20Removal%20Scripts/GenericMSI.ps1",
         "discoveryMethod": "MSI",
         "scriptArgs": ["Barracuda RMM Support Assistant"]
+    },
+    "VIP Access" : {
+        "uninstallScript": "https://raw.githubusercontent.com/ainfosys/ScriptHelpers/refs/heads/main/App%20Removal%20Scripts/GenericMSI.ps1",
+        "discoveryMethod": "MSI",
+        "scriptArgs": ["VIP Access"]
     }
 }
