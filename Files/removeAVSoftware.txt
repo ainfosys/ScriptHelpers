@@ -1,0 +1,9 @@
+Bitdefender Endpoint Security Tools
+HP Wolf Security*
+*McAfee*
+MSC
+PC Optimizer
+SecurityCenter
+VIP Access
+VShieldScanManager
+Webroot SecureAnywhere
