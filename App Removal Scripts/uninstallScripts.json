@@ -131,5 +131,19 @@
         "uninstallScript": "https://raw.githubusercontent.com/ainfosys/ScriptHelpers/refs/heads/main/App%20Removal%20Scripts/GenericMSI.ps1",
         "discoveryMethod": "MSI",
         "scriptArgs": ["VIP Access"]
+    },
+    "HP Wolf Security*" : {
+        "uninstallScript": "https://raw.githubusercontent.com/ainfosys/ScriptHelpers/refs/heads/main/App%20Removal%20Scripts/GenericMSI.ps1",
+        "discoveryMethod": "MSI",
+        "scriptArgs": ["HP Wolf Security*"]
+    },
+    "Bitdefender Endpoint Security Tools": {
+        "uninstallScript": "https://raw.githubusercontent.com/ainfosys/ScriptHelpers/refs/heads/main/App%20Removal%20Scripts/BitdefenderEST.ps1",
+        "discoveryMethod": "Registry"
+    },
+    "Webroot SecureAnywhere" : {
+        "uninstallScript": "https://raw.githubusercontent.com/ainfosys/ScriptHelpers/refs/heads/main/App%20Removal%20Scripts/GenericMSI.ps1",
+        "discoveryMethod": "MSI",
+        "scriptArgs": ["Webroot SecureAnywhere"]
     }
 }
