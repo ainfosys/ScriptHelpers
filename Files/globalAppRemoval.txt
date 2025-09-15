@@ -3,6 +3,7 @@ Advanced Monitoring Agent Network Management
 Advanced Monitoring Agent Web Protection
 AteraAgent
 Automate Control Center
+Auvik SaaS Management
 Barracuda RMM Support Assistant
 ConnectWise Automate Control Center
 ConnectWiseChat
