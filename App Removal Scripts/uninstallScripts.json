@@ -145,5 +145,9 @@
         "uninstallScript": "https://raw.githubusercontent.com/ainfosys/ScriptHelpers/refs/heads/main/App%20Removal%20Scripts/GenericMSI.ps1",
         "discoveryMethod": "MSI",
         "scriptArgs": ["Webroot SecureAnywhere"]
+    },
+    "Ecosystem Agent": {
+        "uninstallScript": "https://github.com/ainfosys/ScriptHelpers/blob/main/App%20Removal%20Scripts/Solarwinds%20Ecosystem%20Agent.ps1",
+        "discoveryMethod": "Registry"
     }
 }
