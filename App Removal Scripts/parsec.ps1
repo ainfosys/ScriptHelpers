@@ -19,3 +19,4 @@ if([bool]$app){
 }else{
     Write-Output "Parsec not found on device"
 }
+Exit
