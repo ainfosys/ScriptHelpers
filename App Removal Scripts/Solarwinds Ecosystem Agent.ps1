@@ -13,3 +13,4 @@ try{
 }catch{
     Write-Output "Uninstall process exited with code: $($Process.ExitCode)"
 }
+Exit
