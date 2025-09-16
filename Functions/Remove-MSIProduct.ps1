@@ -19,8 +19,18 @@ function Remove-MSIProduct {
             try{
                 $Command = get-command Translate-ExitCode -ErrorAction stop
                 Translate-ExitCode -Process $Process -AutoOutput
+                if($process.exitcode -eq "1618"){
+                    write-output "Killing msiexec processes and trying again"
+                    get-process msiexec | stop-process -force
+                    Remove-MSIProduct -MSIName $MsiName
+                }
             }catch{
                 Write-Output "Uninstall process exited with code: $($Process.ExitCode)"
+                if($process.exitcode -eq "1618"){
+                    write-output "Killing msiexec processes and trying again"
+                    get-process msiexec | stop-process -force
+                    Remove-MSIProduct -MSIName $MsiName
+                }
             }
         }else{
             Write-Warning "MSI with name `"$MSIName`" not found on system"
@@ -33,8 +43,18 @@ function Remove-MSIProduct {
         try{
             $Command = get-command Translate-ExitCode -ErrorAction stop
             Translate-ExitCode -Process $Process -AutoOutput
+            if($process.exitcode -eq "1618"){
+                write-output "Killing msiexec processes and trying again"
+                get-process msiexec | stop-process -force
+                Remove-MSIProduct -MSIObject $MsiObject
+            }
         }catch{
             Write-Output "Uninstall process exited with code: $($Process.ExitCode)"
+            if($process.exitcode -eq "1618"){
+                write-output "Killing msiexec processes and trying again"
+                get-process msiexec | stop-process -force
+                Remove-MSIProduct -MSIObject $MsiObject
+            }
         }
     }
 }
