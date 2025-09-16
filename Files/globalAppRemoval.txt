@@ -1,3 +1,5 @@
+MSP Core Agent
+Windows Agent
 Action1 Agent
 Advanced Monitoring Agent Network Management
 Advanced Monitoring Agent Web Protection
@@ -16,11 +18,9 @@ KaseyaLiveConnect
 LabTech® Software Remote Agent
 LabTech Software Remote Agent
 MeshCentral
-MSP Core Agent
 Request Handler Agent
 Security Manager AV Defender
 Syncro
 Patch Management Service Controller
 VSA X
-Windows Agent
 Windows Software Probe
