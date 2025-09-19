@@ -151,8 +151,7 @@
         "discoveryMethod": "Registry"
     },
     "Auvik SaaS Management": {
-        "uninstallScript": "https://raw.githubusercontent.com/ainfosys/ScriptHelpers/refs/heads/main/App%20Removal%20Scripts/GenericMSI.ps1",
-        "discoveryMethod": "MSI",
-        "scriptArgs": ["Auvik SaaS Management"]
+        "uninstallScript": "https://raw.githubusercontent.com/ainfosys/ScriptHelpers/refs/heads/main/App%20Removal%20Scripts/Auvik%20Saas%20Management.ps1",
+        "discoveryMethod": "MSI"
     }
 }
