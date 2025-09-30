@@ -43,7 +43,6 @@ $registryKeys = @(
     "HKLM:\SOFTWARE\Classes\Installer\Products\0E1D3F0C2B974FA4AA0418F12B055384\SourceList\Media",
     "HKLM:\SOFTWARE\Classes\Installer\Products\0E1D3F0C2B974FA4AA0418F12B055384\SourceList\Net",
     "HKLM:\SOFTWARE\Classes\Installer\UpgradeCodes\7CF0653F8B24F2647B3A70510A96BEE6",
-    "HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Installer\Folders",
     "HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Installer\UpgradeCodes\7CF0653F8B24F2647B3A70510A96BEE6",
     "HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Installer\UserData\S-1-5-18\Components\08C8C87010175A141912F6695F06EB95",
     "HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Installer\UserData\S-1-5-18\Components\5E3D36BBC4ADCA749AC6CC3774478B04",
@@ -60,20 +59,25 @@ $registryKeys = @(
     "HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Installer\UserData\S-1-5-18\Products\0E1D3F0C2B974FA4AA0418F12B055384\Patches",
     "HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Installer\UserData\S-1-5-18\Products\0E1D3F0C2B974FA4AA0418F12B055384\Usage",
     "HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Installer\UserData\S-1-5-18\Products\1C36F61EB5609424C81AF5A41E3C6894",
+    "HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Installer\UserData\S-1-5-18\Products\C7BFF9AEFE6FEFB4EBC694AD37DF9C5A",
     "HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Uninstall\{C0F3D1E0-79B2-4AF4-AA40-811FB2503548}",
     "HKLM:\SYSTEM\CurrentControlSet\Services\ZTAC",
     "HKLM:\SYSTEM\CurrentControlSet\Services\ZtacFltr",
     "HLKM:\SOFTWARE\Classes\Installer\Features\1C36F61EB5609424C81AF5A41E3C6894",
     "HKLM:\SOFTWARE\Classes\Installer\Products\1C36F61EB5609424C81AF5A41E3C6894",
     "HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Uninstall\{E16F63C1-065B-4249-8CA1-5F4AE1C38649}",
+    "HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Uninstall\{EA9FFB7C-F6EF-4BFE-BE6C-49DA73FDC9A5}",
     "HKLM:\SYSTEM\ControlSet002\Services\ZTAC",
-    "HKLM:\SYSTEM\ControlSet002\Services\ZtacFltr"
+    "HKLM:\SYSTEM\ControlSet002\Services\ZtacFltr",
+    "HKLM:\SYSTEM\Setup\FirstBoot\Services\Snap",
+    "HKLM:\SYSTEM\Setup\FirstBoot\Services\ZTAC",
+    "Registry::HKEY_CLASSES_ROOT\Installer\Products\C7BFF9AEFE6FEFB4EBC694AD37DF9C5A"
 )
 
 # Loop through each registry key and delete it
 Write-output "Removing registry keys"
 foreach ($key in $registryKeys) {
-    Remove-Item -Path $key -Recurse -Force -ErrorAction ignore
+    Remove-Item -Path $key -force -erroraction ignore
 }
 
 # Remove the services
@@ -82,6 +86,8 @@ sc stop ZTAC
 sc delete ZTAC
 sc stop ZtacFltr
 sc delete ZtacFltr
+sc stop snap
+sc delete snap
 
 # Wait for 10 seconds
 Start-Sleep -Seconds 10
@@ -90,3 +96,13 @@ Start-Sleep -Seconds 10
 Write-output "Removing blackpoint program files directory"
 Remove-Item -Path "C:\Program Files (x86)\Blackpoint\" -Force -Recurse -ErrorAction ignore
 Remove-Item -Path "C:\ProgramData\Blackpoint" -force -recurse -erroraction ignore
+
+# uninstall drivers
+$AllDrivers = Get-WindowsDriver -Online
+$BlackpointDriver = $AllDrivers | where {$_.providerName -ieq "Blackpoint Cyber"}
+if([bool]$BlackpointDriver){
+  write-output "Attempting removal of blackpoint driver"
+  foreach($driver in $BlackpointDriver){
+    pnputil /delete-driver $($driver.Driver) /uninstall /force
+  }
+}
