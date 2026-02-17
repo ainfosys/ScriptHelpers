@@ -8,7 +8,9 @@ function Invoke-FileDownload {
         [parameter(HelpMessage = "Determines if progress bars are shown for Invoke-Webrequest and Start-BitsTransfer")]
         #https://learn.microsoft.com/en-us/powershell/module/microsoft.powershell.core/about/about_preference_variables?view=powershell-5.1#progresspreference
         [validateset("SilentlyContinue","Continue","Stop","Ignore")]
-        $ProgressPreference = 'SilentlyContinue' # SilentlyContinue will speed up download speeds
+        $ProgressPreference = 'SilentlyContinue', # SilentlyContinue will speed up download speeds
+        [parameter()]
+        [switch]$OutputErrors
     )
 
     try{
@@ -47,6 +49,9 @@ function Invoke-FileDownload {
         return $return
     }
     catch{
+        if([bool]$OutputErrors){
+            $Error[0]
+        }
         try{
             # cURL
             Write-Verbose "Invoke-FileDownload: Invoke-WebRequest transfer failed, attempting file transfer using cURL"
@@ -66,6 +71,9 @@ function Invoke-FileDownload {
             return $return
         }
         catch{
+            if([bool]$OutputErrors){
+                $Error[0]
+            }
             # Webclient object
             Write-Verbose "Invoke-FileDownload: cURL transfer failed, attempting webclient object file transfer"
             $stopwatch = New-Object -TypeName 'System.Diagnostics.Stopwatch'
