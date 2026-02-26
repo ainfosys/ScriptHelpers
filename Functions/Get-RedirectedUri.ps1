@@ -5,5 +5,5 @@ function Get-RedirectedUri {
       [Parameter(Mandatory = $true)]
       [string]$Uri
   )
-  curl -sL -w "%{url_effective}" $Uri -o /dev/null
+  cmd.exe /c curl -sL -w "%{url_effective}" $Uri -o /dev/null
 }
