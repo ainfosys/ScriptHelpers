@@ -46,7 +46,8 @@ function Invoke-FileDownload {
             "Total_Time"        = $stopwatch.Elapsed
             "Output"            = $destination
         }
-        return $return
+        $return
+        return "`n"
     }
     catch {
         try {
@@ -61,7 +62,8 @@ function Invoke-FileDownload {
                 "Total_Time"        = $stopwatch.Elapsed
                 "Output"            = $destination
             }
-            return $return
+            $return
+            return "`n"
         }
         catch {
             if ([bool]$OutputErrors) {
@@ -83,7 +85,8 @@ function Invoke-FileDownload {
                     "Total_Time"        = $stopwatch.Elapsed
                     "Output"            = $destination
                 }
-                return $return
+                $return
+                return "`n"
             }
             catch {
                 if ([bool]$OutputErrors) {
@@ -104,7 +107,8 @@ function Invoke-FileDownload {
                     "Total_Time"        = $stopwatch.Elapsed
                     "Output"            = $destination
                 }
-                return $return
+                $return
+                return "`n"
             }
         }
     }
