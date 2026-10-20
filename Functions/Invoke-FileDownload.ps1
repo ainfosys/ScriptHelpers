@@ -10,7 +10,14 @@ function Invoke-FileDownload {
         [validateset("SilentlyContinue", "Continue", "Stop", "Ignore")]
         $ProgressPreference = 'SilentlyContinue', # SilentlyContinue will speed up download speeds
         [parameter()]
-        [switch]$OutputErrors
+        [switch]$OutputErrors,
+        # Header Parameters
+        [parameter()]
+        $UserAgent,
+        [parameter()]
+        $Accept,
+        [parameter()]
+        $Referer
     )
 
     try {
@@ -33,13 +40,43 @@ function Invoke-FileDownload {
         throw "Invoke-FileDownload: Invalid file name provided with destination path"
     }
 
+    # build custom headers if needed
+    if ([bool]$UserAgent) {
+        $customHeaders = New-Object "System.Collections.Generic.Dictionary[[String],[String]]"
+        $customHeaders.Add("User-Agent", $UserAgent)
+    }
+    if ([bool]$Accept) {
+        if ([bool]$customHeaders) {
+            $customHeaders.Add("Accept", $Accept)
+        }
+        else {
+            $customHeaders = New-Object "System.Collections.Generic.Dictionary[[String],[String]]"
+            $customHeaders.Add("Accept", $Accept)
+        }
+    }
+    if ([bool]$Referer) {
+        if ([bool]$customHeaders) {
+            $customHeaders.Add("referer", $Referer)
+        }
+        else {
+            $customHeaders = New-Object "System.Collections.Generic.Dictionary[[String],[String]]"
+            $customHeaders.Add("referer", $Referer)
+        }
+    }
+
+
     # attempt download
     try {
         # BITS
         Write-Verbose "Invoke-FileDownload: Attempting file transfer using BITS"
         $stopwatch = New-Object -TypeName 'System.Diagnostics.Stopwatch'
         $stopwatch.Start()
-        Start-BitsTransfer -TransferType Download -Destination $destination -Source $source -ErrorAction stop
+        if ([bool]$customHeaders) {
+            Start-BitsTransfer -TransferType Download -Destination $destination -Source $source -CustomHeaders $customHeaders -ErrorAction stop
+        }
+        else {
+            Start-BitsTransfer -TransferType Download -Destination $destination -Source $source -ErrorAction stop
+        }
         $stopwatch.Stop()
         $return = [pscustomobject]@{
             "Download_Function" = "BITS"
@@ -55,7 +92,12 @@ function Invoke-FileDownload {
             Write-Verbose "Invoke-FileDownload: BITS transfer failed, attempting file transfer using invoke-webrequest"
             $stopwatch = New-Object -TypeName 'System.Diagnostics.Stopwatch'
             $stopwatch.Start()
-            Invoke-webrequest -UseBasicParsing -Uri $source -OutFile $destination -ErrorAction stop
+            if ([bool]$customHeaders) {
+                Invoke-webrequest -UseBasicParsing -Uri $source -OutFile $destination -Headers $customHeaders -ErrorAction stop
+            }
+            else {
+                Invoke-webrequest -UseBasicParsing -Uri $source -OutFile $destination -ErrorAction stop
+            }
             $stopwatch.Stop()
             $return = [pscustomobject]@{
                 "Download_Function" = "Invoke-WebRequest"
@@ -72,9 +114,19 @@ function Invoke-FileDownload {
             try {
                 # cURL
                 Write-Verbose "Invoke-FileDownload: Invoke-WebRequest transfer failed, attempting file transfer using cURL"
+                if ([bool]$customHeaders) {
+                    $curlHeaders = foreach ($Key in $customHeaders.Keys) {
+                        "`"$Key`: $($customHeaders.$Key)`""
+                    }
+                }
                 $stopwatch = New-Object -TypeName 'System.Diagnostics.Stopwatch'
                 $stopwatch.Start()
-                $process = Start-Process curl -ArgumentList "-sLo $destination $source" -wait -ErrorAction stop
+                if ([bool]$curlHeaders) {
+                    $process = Start-Process curl -ArgumentList "-H $($curlHeaders -join " -H ") -sLo $destination $source" -wait -ErrorAction stop
+                }
+                else {
+                    $process = Start-Process curl -ArgumentList "-sLo $destination $source" -wait -ErrorAction stop
+                }
                 $stopwatch.Stop()
                 # double check if the file was successfully downloaded
                 if (!(test-path $destination)) {
@@ -96,7 +148,16 @@ function Invoke-FileDownload {
                 Write-Verbose "Invoke-FileDownload: cURL transfer failed, attempting webclient object file transfer"
                 $stopwatch = New-Object -TypeName 'System.Diagnostics.Stopwatch'
                 $stopwatch.Start()
-                (New-Object System.Net.WebClient).DownloadFile($source, $destination)
+                if ([bool]$customHeaders) {
+                    $webClient = New-Object System.Net.WebClient
+                    foreach ($key in $customHeaders.Keys) {
+                        $webClient.Headers.Add($Key, $customHeaders.$Key)
+                    }
+                    $webClient.DownloadFile($source, $destination)
+                }
+                else {
+                    (New-Object System.Net.WebClient).DownloadFile($source, $destination)
+                }
                 $stopwatch.Stop()
                 # double check if the file was successfully downloaded
                 if (!(test-path $destination)) {
