@@ -1,0 +1,9 @@
+*TorrentRTFREEPlus*
+Bittorrent
+Deluge
+Free Download Manager
+qBittorrent*
+Transmission
+UltraVNC*
+uTorrent
+Vuze
