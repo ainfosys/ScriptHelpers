@@ -4,6 +4,7 @@ GOG GALAXY
 Riot Client
 Rockstar Games Launcher
 Steam
+Ubisoft Connect
 WildTangent Games
 WildTangentGames.63435CFB65F55
 WildTangentGames*
