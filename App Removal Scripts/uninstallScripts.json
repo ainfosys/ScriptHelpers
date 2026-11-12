@@ -4,12 +4,12 @@
         "discoveryMethod": "Registry"
     },
     "MSP Core Agent": {
-        "uninstallScript": "https://raw.githubusercontent.com/ainfosys/ScriptHelpers/refs/heads/main/App%20Removal%20Scripts/GenericMSI.ps1",
+        "uninstallScript": "Generic MSI Uninstall",
         "discoveryMethod": "MSI",
         "scriptArgs": ["MSP Core Agent"]
     },
     "Windows Agent": {
-        "uninstallScript": "https://raw.githubusercontent.com/ainfosys/ScriptHelpers/refs/heads/main/App%20Removal%20Scripts/GenericMSI.ps1",
+        "uninstallScript": "Generic MSI Uninstall",
         "discoveryMethod": "MSI",
         "scriptArgs": ["Windows Agent"]
     },
@@ -34,7 +34,7 @@
         "discoveryMethod": "MSI"
     },
     "RealVNC Server*": {
-        "uninstallScript": "https://raw.githubusercontent.com/ainfosys/ScriptHelpers/refs/heads/main/App%20Removal%20Scripts/GenericMSI.ps1",
+        "uninstallScript": "Generic MSI Uninstall",
         "discoveryMethod": "MSI",
         "scriptArgs": ["RealVNC Server*"]
     },
@@ -47,22 +47,22 @@
         "discoveryMethod": "Registry"
     },
     "LogMeIn*": {
-        "uninstallScript": "https://raw.githubusercontent.com/ainfosys/ScriptHelpers/refs/heads/main/App%20Removal%20Scripts/GenericMSI.ps1",
+        "uninstallScript": "Generic MSI Uninstall",
         "discoveryMethod": "MSI",
         "scriptArgs": ["LogMeIn*"]
     },
     "TightVNC": {
-        "uninstallScript": "https://raw.githubusercontent.com/ainfosys/ScriptHelpers/refs/heads/main/App%20Removal%20Scripts/GenericMSI.ps1",
+        "uninstallScript": "Generic MSI Uninstall",
         "discoveryMethod": "MSI",
         "scriptArgs": ["TightVNC"]
     },
     "Splashtop Streamer*": {
-        "uninstallScript": "https://raw.githubusercontent.com/ainfosys/ScriptHelpers/refs/heads/main/App%20Removal%20Scripts/GenericMSI.ps1",
+        "uninstallScript": "Generic MSI Uninstall",
         "discoveryMethod": "MSI",
         "scriptArgs": ["Splashtop Streamer*"]
     },
     "Action1 Agent": {
-        "uninstallScript": "https://raw.githubusercontent.com/ainfosys/ScriptHelpers/refs/heads/main/App%20Removal%20Scripts/GenericMSI.ps1",
+        "uninstallScript": "Generic MSI Uninstall",
         "discoveryMethod": "MSI",
         "scriptArgs": ["Action1 Agent"]
     },
@@ -75,7 +75,7 @@
         "discoveryMethod": "Registry"
     },
     "AteraAgent": {
-        "uninstallScript": "https://raw.githubusercontent.com/ainfosys/ScriptHelpers/refs/heads/main/App%20Removal%20Scripts/GenericMSI.ps1",
+        "uninstallScript": "Generic MSI Uninstall",
         "discoveryMethod": "MSI",
         "scriptArgs": ["AteraAgent"]
     },
@@ -88,7 +88,7 @@
         "discoveryMethod": "Registry"
     },
     "ITSPlatform": {
-        "uninstallScript": "https://raw.githubusercontent.com/ainfosys/ScriptHelpers/refs/heads/main/App%20Removal%20Scripts/GenericMSI.ps1",
+        "uninstallScript": "Generic MSI Uninstall",
         "discoveryMethod": "MSI",
         "scriptArgs": ["ITSPlatform"]
     },
@@ -101,12 +101,12 @@
         "discoveryMethod": "Registry"
     },
     "*VNC Server*": {
-        "uninstallScript": "https://raw.githubusercontent.com/ainfosys/ScriptHelpers/refs/heads/main/App%20Removal%20Scripts/GenericMSI.ps1",
+        "uninstallScript": "Generic MSI Uninstall",
         "discoveryMethod": "MSI",
         "scriptArgs": ["*VNC Server*"]
     },
     "BeyondTrust Remote Desktop*": {
-        "uninstallScript": "https://raw.githubusercontent.com/ainfosys/ScriptHelpers/refs/heads/main/App%20Removal%20Scripts/GenericMSI.ps1",
+        "uninstallScript": "Generic MSI Uninstall",
         "discoveryMethod": "MSI",
         "scriptArgs": ["BeyondTrust Remote Desktop*"]
     },
@@ -123,17 +123,17 @@
         "discoveryMethod": "Registry"
     },
     "Barracuda RMM Support Assistant" : {
-        "uninstallScript": "https://raw.githubusercontent.com/ainfosys/ScriptHelpers/refs/heads/main/App%20Removal%20Scripts/GenericMSI.ps1",
+        "uninstallScript": "Generic MSI Uninstall",
         "discoveryMethod": "MSI",
         "scriptArgs": ["Barracuda RMM Support Assistant"]
     },
     "VIP Access" : {
-        "uninstallScript": "https://raw.githubusercontent.com/ainfosys/ScriptHelpers/refs/heads/main/App%20Removal%20Scripts/GenericMSI.ps1",
+        "uninstallScript": "Generic MSI Uninstall",
         "discoveryMethod": "MSI",
         "scriptArgs": ["VIP Access"]
     },
     "HP Wolf Security*" : {
-        "uninstallScript": "https://raw.githubusercontent.com/ainfosys/ScriptHelpers/refs/heads/main/App%20Removal%20Scripts/GenericMSI.ps1",
+        "uninstallScript": "Generic MSI Uninstall",
         "discoveryMethod": "MSI",
         "scriptArgs": ["HP Wolf Security*"]
     },
@@ -142,7 +142,7 @@
         "discoveryMethod": "Registry"
     },
     "Webroot SecureAnywhere" : {
-        "uninstallScript": "https://raw.githubusercontent.com/ainfosys/ScriptHelpers/refs/heads/main/App%20Removal%20Scripts/GenericMSI.ps1",
+        "uninstallScript": "Generic MSI Uninstall",
         "discoveryMethod": "MSI",
         "scriptArgs": ["Webroot SecureAnywhere"]
     },
@@ -155,13 +155,43 @@
         "discoveryMethod": "MSI"
     },
     "Acronis Cyber Protect": {
-        "uninstallScript": "https://raw.githubusercontent.com/ainfosys/ScriptHelpers/refs/heads/main/App%20Removal%20Scripts/GenericMSI.ps1",
+        "uninstallScript": "Generic MSI Uninstall",
         "discoveryMethod": "MSI",
         "scriptArgs": ["Acronis Cyber Protect"]
     },
     "Cyber Protect Agent": {
-        "uninstallScript": "https://raw.githubusercontent.com/ainfosys/ScriptHelpers/refs/heads/main/App%20Removal%20Scripts/GenericMSI.ps1",
+        "uninstallScript": "Generic MSI Uninstall",
         "discoveryMethod": "MSI",
         "scriptArgs": ["Cyber Protect Agent"]
+    },
+    "qBittorrent": {
+        "uninstallScript": "Generic App Uninstall",
+        "discoveryMethod": "Registry",
+        "scriptArgs": ["qBittorrent","/S /NoRestart"]
+    },
+    "Deluge*": {
+        "uninstallScript": "Generic App Uninstall",
+        "discoveryMethod": "Registry",
+        "scriptArgs": ["Deluge*","/S /NoRestart"]
+    },
+    "Epic Games Launcher": {
+        "uninstallScript": "Generic MSI Uninstall",
+        "discoveryMethod": "MSI",
+        "scriptArgs": ["Epic Games Launcher","EpicGamesLauncher"]
+    },
+    "GOG GALAXY": {
+        "uninstallScript": "Generic App Uninstall",
+        "discoveryMethod": "Registry",
+        "scriptArgs": ["GOG GALAXY","/VERYSILENT /NORESTART","GalaxyClient"]
+    },
+    "Transmission*": {
+        "uninstallScript": "Generic MSI Uninstall",
+        "discoveryMethod": "MSI",
+        "scriptArgs": ["Transmission*","Transmission-qt"]
+    },
+    "Vuze": {
+        "uninstallScript": "Generic App Uninstall",
+        "discoveryMethod": "Registry",
+        "scriptArgs": ["Vuze","-q","Azureus"]
     }
 }
