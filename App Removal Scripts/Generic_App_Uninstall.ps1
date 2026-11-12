@@ -25,7 +25,7 @@ if (!$ProcessName) {
     $ProcessName = $applicationName
 }
 
-Get-process $ProcessName -ErrorAction SilentlyContinue | stop-process -Force -ErrorAction SilentlyContinue 
+$(Get-process) | where {$_.Name -like $applicationName} | stop-process -Force -ErrorAction SilentlyContinue 
 
 $apps = get-installedapps
 $app = $apps | where { $_.displayname -ieq $applicationName }
