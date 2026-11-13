@@ -1,8 +1,23 @@
+aria2
+Aria2 Next
+BiglyBT
+BitComet
+BitLord
 Bittorrent
 Bittorrent Web
 Deluge
+eMule
 Free Download Manager
+FrostWire
+I2P Snark
+libtorrent
+LibreTorrent
+Nicotine+
+PikaTorrent
 qBittorrent*
+RetroShare
+Soulseek
+Tixati
 Transmission
 uTorrent Web
 Vuze
