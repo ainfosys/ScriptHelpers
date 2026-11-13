@@ -1,8 +1,9 @@
 *TorrentRTFREEPlus*
 Bittorrent
+Bittorrent Web
 Deluge
 Free Download Manager
 qBittorrent*
 Transmission
-uTorrent
+uTorrent Web
 Vuze
