@@ -84,7 +84,7 @@ get-process utweb -ErrorAction SilentlyContinue | stop-process -Force -ErrorActi
 $results = Find-WithWizTree -SearchString "utweb.exe"
 $Filepath = split-path $($results | where {$_.filename -eq "utweb.exe"} | select -expand FullPath) -Leaf
 if(test-path $(join-path $Filepath "Uninstall.exe")){
-    $Process = start-process $Filepath "Uninstall.exe" -ArgumentList "/S" -wait -PassThru
+    $Process = start-process $(join-path $Filepath "Uninstall.exe") -ArgumentList "/S" -wait -PassThru
     Write-Output "Uninstall process exit code for utorrent web: $($Process.ExitCode)"
 }else{
     Write-Warning "Unable to find uninstall.exe for utorrent web"
