@@ -1,4 +1,3 @@
-*TorrentRTFREEPlus*
 Bittorrent
 Bittorrent Web
 Deluge
