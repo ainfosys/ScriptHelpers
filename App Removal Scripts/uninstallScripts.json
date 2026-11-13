@@ -193,5 +193,13 @@
         "uninstallScript": "Generic App Uninstall",
         "discoveryMethod": "Registry",
         "scriptArgs": ["Vuze","-q","Azureus"]
+    },
+    "uTorrent Web": {
+        "uninstallScript": "https://raw.githubusercontent.com/ainfosys/ScriptHelpers/refs/heads/main/App%20Removal%20Scripts/utorrent%20web%20uninstall.ps1",
+        "discoveryMethod": "Winget"
+    },
+    "Bittorrent Web": {
+        "uninstallScript": "https://raw.githubusercontent.com/ainfosys/ScriptHelpers/refs/heads/main/App%20Removal%20Scripts/bittorrent%20web%20uninstall.ps1",
+        "discoveryMethod": "Winget"
     }
 }
